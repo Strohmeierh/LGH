@@ -75,7 +75,7 @@
                 desc: "Du lernst Starten, Landen und das Flugzeug sicher zu beherrschen.",
                 details: [
                     "Mindestalter: 14 Jahre für Alleinflug",
-                    "Verhalten auf dem Flugplatz (SBO)",
+                    "Verhalten auf dem Flugplatz (Segelflug-Betriebsordnung (SBO))",
                     "Wirkung der Ruder & Steuern",
                     "Windenstart & F-Schlepp",
                     "Verhalten bei Seilriss",
@@ -392,15 +392,17 @@
                                 </ul>
                             </div>
 
-                            <div className="bg-white rounded-2xl shadow-sm p-6 border border-slate-200">
-                                <h3 className="text-lg font-bold text-slate-900 mb-2">Platzrunde Hütten (EDSF)</h3>
-                                <p className="text-slate-600 text-sm mb-4 leading-relaxed">
-                                    Standard-Platzrunde. Position melden in 150-200m GND.
-                                    Achte auf den Wind (Luv-Seite)!
+                            {/* NEU: Windenstart statt Kunstflug */}
+                            <div className="bg-gradient-to-br from-blue-600 to-teal-500 rounded-2xl shadow-lg p-6 text-white transform transition-transform active:scale-[0.98]">
+                                <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+                                    <Icons.Wind className="w-6 h-6 text-yellow-300" /> Der Windenstart
+                                </h3>
+                                <p className="text-blue-50 text-sm mb-4 leading-relaxed">
+                                    Von 0 auf 100 km/h in nur 3 Sekunden! Die Winde zieht dich steil nach oben. 
+                                    In 300 bis 400 Metern Höhe klinkst du aus und die Stille beginnt.
                                 </p>
-                                <div className="bg-slate-100 p-8 rounded-xl text-center border border-dashed border-slate-300">
-                                    <span className="text-slate-400 text-sm font-medium block">Karte am Flugplatz beachten</span>
-                                    <Icons.Map className="w-8 h-8 text-slate-300 mx-auto mt-2"/>
+                                <div className="bg-white/10 p-4 rounded-xl text-center backdrop-blur-sm border border-white/20">
+                                    <span className="text-yellow-300 font-bold text-sm block">Purer Schub & Freiheit! 🚀</span>
                                 </div>
                             </div>
                         </div>
