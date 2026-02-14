@@ -361,9 +361,28 @@
                     title: "Fliegen lernen",
                     intro: "Der Traum vom Fliegen kann wahr werden. Wir bilden Segelflugpiloten (SPL) ehrenamtlich aus.",
                     steps: [
-                        { title: "Schnupperkurs", text: "Lerne uns und den Sport kennen. 4 Wochen Mitfliegen und erste Starts am Steuer." },
+                        { title: "Schnupperkurs", text: (
+                            <span>
+                                Wir bieten regelmäßig Schnupperkurse an. Der nächste Termin ist der <strong className="text-blue-600">Schnupperflugtag am 02.05.2026</strong>.
+                            </span>
+                        )},
                         { title: "Die Ausbildung", text: "Praktische Schulung im Doppelsitzer bis zum ersten Alleinflug." },
-                        { title: "Theorie", text: "Im Winter findet der theoretische Unterricht in Fächern wie Meteorologie, Technik und Luftrecht statt." },
+                        { title: "Theorie", text: (
+                            <div>
+                                <p className="mb-2">Im Winter findet der theoretische Unterricht in folgenden 9 Fächern statt:</p>
+                                <ul className="list-disc pl-5 space-y-1 text-sm">
+                                    <li>Luftrecht</li>
+                                    <li>Menschliches Leistungsvermögen</li>
+                                    <li>Meteorologie (Wetterkunde)</li>
+                                    <li>Kommunikation (Sprechfunk)</li>
+                                    <li>Grundlagen des Fliegens (Aerodynamik)</li>
+                                    <li>Betriebliche Verfahren</li>
+                                    <li>Flugleistung und Flugplanung</li>
+                                    <li>Allgemeine Luftfahrzeugkunde</li>
+                                    <li>Navigation</li>
+                                </ul>
+                            </div>
+                        )},
                         { title: "Lizenz", text: "Nach der Prüfung hältst du deine weltweite Lizenz in den Händen." }
                     ]
                 },
@@ -412,7 +431,18 @@
 
         // --- SEITEN (PAGES) ---
 
-        const HomePage = ({ setCurrentPage }) => (
+        const HomePage = ({ setCurrentPage }) => {
+            // Live Webcam Refresh Logic
+            const [webcamUrl, setWebcamUrl] = useState("https://www.lgh-platz.de/cam/cam31.jpg");
+            
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setWebcamUrl(`https://www.lgh-platz.de/cam/cam31.jpg?t=${new Date().getTime()}`);
+                }, 60000); // Refresh every 60 seconds
+                return () => clearInterval(interval);
+            }, []);
+
+            return (
             <div className="space-y-16 animate-fadeIn">
                 <div className="relative h-[600px] rounded-2xl overflow-hidden shadow-xl mx-4 lg:mx-0">
                     <div className="absolute inset-0 bg-gray-900/40 z-10"></div>
@@ -486,7 +516,7 @@
                                 <div className="relative h-full w-full flex-grow bg-black flex items-center justify-center">
                                     {/* Bild der Webcam - Vollständig angezeigt mit object-contain */}
                                     <img 
-                                        src="http://www.lgh-platz.de/cam/cam31.jpg" 
+                                        src={webcamUrl}
                                         alt="Live Webcam" 
                                         className="max-h-full max-w-full object-contain"
                                     />
@@ -506,7 +536,8 @@
                     </div>
                 </div>
             </div>
-        );
+            );
+        };
 
         const AirportPage = () => (
             <div className="max-w-5xl mx-auto px-4 py-8 animate-fadeIn">
@@ -662,7 +693,7 @@
                             </div>
                             <div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
-                                <p className="text-gray-600 leading-relaxed">{step.text}</p>
+                                <div className="text-gray-600 leading-relaxed">{step.text}</div>
                             </div>
                         </div>
                     ))}
@@ -698,9 +729,6 @@
                             <Button onClick={() => window.open(siteContent.pages.competition.externalLink, '_blank')} className="flex items-center gap-2">
                                 Zur Wettbewerbs-Webseite <ExternalLink size={18} />
                             </Button>
-                            <p className="text-sm text-gray-500 mt-2">
-                                (Öffnet in neuem Tab)
-                            </p>
                         </div>
                     </div>
 
