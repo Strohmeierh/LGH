@@ -54,6 +54,7 @@
         const Phone = (props) => <Icon {...props}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></Icon>;
         const ArrowRight = (props) => <Icon {...props}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></Icon>;
         const ChevronRight = (props) => <Icon {...props}><path d="m9 18 6-6-6-6"/></Icon>;
+        const ChevronUp = (props) => <Icon {...props}><path d="m18 15-6-6-6 6"/></Icon>;
         const Cloud = (props) => <Icon {...props}><path d="M17.5 19c0 2.167-1.697 3.925-3.868 4.002L12 23h-3.5c-3.038 0-5.5-2.462-5.5-5.5 0-2.486 1.637-4.606 3.9-5.263l.314-.09C8.327 7.283 11.237 5 14.5 5c3.59 0 6.5 2.91 6.5 6.5 0 .234-.012.466-.035.696C20.96 12.28 23 14.363 23 17a4.002 4.002 0 0 1-3.998 4h-.002z"/></Icon>;
         const Info = (props) => <Icon {...props}><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></Icon>;
         const Plane = (props) => <Icon {...props}><path d="M2 22h20"/><path d="M20.4 14.2 13.5 2 11.1 2l2.4 12.2L6 18l-1.5-1.5L2.9 18l5.8 4h11.7Z"/></Icon>;
@@ -102,11 +103,81 @@
                     ]
                 },
                 fleet: [
-                    { name: "ASK 21", id: "D-5383", type: "Doppelsitzer", desc: "Unser robustes Schulungsflugzeug für die Anfängerausbildung und Gastflüge.", image: "public/images/ASK-21-22.jpg" },
-                    { name: "Duo Discus", id: "D-5678", type: "Hochleistungs-Doppelsitzer", desc: "Für Streckenflugtraining und Leistungsflüge zu zweit.", image: "https://placehold.co/400x250/e2e8f0/1e293b?text=Duo+Discus" },
-                    { name: "LS 4", id: "D-9012", type: "Einsitzer", desc: "Der klassische Einsitzer für die ersten Alleinüberlandflüge.", image: "https://placehold.co/400x250/e2e8f0/1e293b?text=LS+4" },
-                    { name: "Discus 2b", id: "D-3456", type: "Hochleistungs-Einsitzer", desc: "Wettbewerbsflugzeug der Standardklasse.", image: "https://placehold.co/400x250/e2e8f0/1e293b?text=Discus+2b" },
-                    { name: "Motorsegler", id: "D-K...", type: "TMG", desc: "Für Reiseflüge und Schulung auch ohne Thermik.", image: "https://placehold.co/400x250/e2e8f0/1e293b?text=Motorsegler" }
+                    { 
+                        name: "ASK 21", 
+                        id: "D-5383", 
+                        type: "Doppelsitzer", 
+                        desc: "Unser robustes Schulungsflugzeug für die Anfängerausbildung und Gastflüge. Gutmütig und kunstflugtauglich.", 
+                        image: "/images/ask21-22.jpg",
+                        specs: [
+                            { label: "Spannweite", value: "17,00 m" },
+                            { label: "Gleitzahl", value: "34" },
+                            { label: "Höchstgeschwindigkeit", value: "280 km/h" },
+                            { label: "Leermasse", value: "ca. 360 kg" },
+                            { label: "Max. Abflugmasse", value: "600 kg" },
+                            { label: "Sitzplätze", value: "2" }
+                        ]
+                    },
+                    { 
+                        name: "Duo Discus", 
+                        id: "D-KSGS", 
+                        type: "Hochleistungs-Doppelsitzer", 
+                        desc: "Für Streckenflugtraining und Leistungsflüge zu zweit. Ein beliebtes Flugzeug für Wettbewerbe und weite Distanzen.", 
+                        image: "/images/D-KSGS.jpg",
+                        specs: [
+                            { label: "Spannweite", value: "20,00 m" },
+                            { label: "Gleitzahl", value: "46-47" },
+                            { label: "Höchstgeschwindigkeit", value: "263 km/h" },
+                            { label: "Leermasse", value: "ca. 410 kg" },
+                            { label: "Max. Abflugmasse", value: "700 kg" },
+                            { label: "Sitzplätze", value: "2" }
+                        ]
+                    },
+                    { 
+                        name: "LS 4", 
+                        id: "D-9012", 
+                        type: "Einsitzer", 
+                        desc: "Der klassische Einsitzer für die ersten Alleinüberlandflüge. Einfaches Handling kombiniert mit guten Leistungen.", 
+                        image: "https://placehold.co/400x250/e2e8f0/1e293b?text=LS+4",
+                        specs: [
+                            { label: "Spannweite", value: "15,00 m" },
+                            { label: "Gleitzahl", value: "40.5" },
+                            { label: "Höchstgeschwindigkeit", value: "280 km/h" },
+                            { label: "Leermasse", value: "ca. 240 kg" },
+                            { label: "Max. Abflugmasse", value: "525 kg" },
+                            { label: "Sitzplätze", value: "1" }
+                        ]
+                    },
+                    { 
+                        name: "Discus 2b", 
+                        id: "D-3456", 
+                        type: "Hochleistungs-Einsitzer", 
+                        desc: "Wettbewerbsflugzeug der Standardklasse mit hervorragenden Gleiteigenschaften.", 
+                        image: "https://placehold.co/400x250/e2e8f0/1e293b?text=Discus+2b",
+                        specs: [
+                            { label: "Spannweite", value: "15,00 m" },
+                            { label: "Gleitzahl", value: "42" },
+                            { label: "Höchstgeschwindigkeit", value: "250 km/h" },
+                            { label: "Leermasse", value: "ca. 245 kg" },
+                            { label: "Max. Abflugmasse", value: "525 kg" },
+                            { label: "Sitzplätze", value: "1" }
+                        ]
+                    },
+                    { 
+                        name: "Motorsegler", 
+                        id: "D-K...", 
+                        type: "TMG", 
+                        desc: "Für Reiseflüge und Schulung auch ohne Thermik.", 
+                        image: "https://placehold.co/400x250/e2e8f0/1e293b?text=Motorsegler",
+                        specs: [
+                            { label: "Spannweite", value: "15,00+ m" },
+                            { label: "Reisegeschwindigkeit", value: "ca. 140 km/h" },
+                            { label: "Motor", value: "Rotax/Limbach" },
+                            { label: "Tankinhalt", value: "ca. 50 l" },
+                            { label: "Reichweite", value: "ca. 600 km" },
+                            { label: "Sitzplätze", value: "2" }
+                        ]
+                    }
                 ],
                 training: {
                     title: "Fliegen lernen",
@@ -258,33 +329,65 @@
             </div>
         );
 
-        const FleetPage = () => (
-            <div className="max-w-6xl mx-auto px-4 py-8 animate-fadeIn">
-                <SectionHeading title="Unsere Flugzeuge" subtitle="Vom Schulungsdoppelsitzer bis zum Hochleistungssegler." />
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {siteContent.pages.fleet.map((plane, idx) => (
-                        <Card key={idx} className="flex flex-col h-full">
-                            <div className="h-48 bg-gray-200 relative">
-                                <img src={plane.image} alt={plane.name} className="w-full h-full object-cover" />
-                                <div className="absolute top-2 right-2 bg-white/90 px-2 py-1 rounded text-xs font-bold shadow-sm">
-                                    {plane.id}
+        const FleetPage = () => {
+            // State für das Auf-/Zuklappen der technischen Daten
+            const [expandedId, setExpandedId] = useState(null);
+
+            const toggleDetails = (idx) => {
+                setExpandedId(expandedId === idx ? null : idx);
+            };
+
+            return (
+                <div className="max-w-6xl mx-auto px-4 py-8 animate-fadeIn">
+                    <SectionHeading title="Unsere Flugzeuge" subtitle="Vom Schulungsdoppelsitzer bis zum Hochleistungssegler." />
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {siteContent.pages.fleet.map((plane, idx) => (
+                            <Card key={idx} className="flex flex-col h-full">
+                                <div className="h-48 bg-gray-200 relative">
+                                    <img src={plane.image} alt={plane.name} className="w-full h-full object-cover" />
+                                    <div className="absolute top-2 right-2 bg-white/90 px-2 py-1 rounded text-xs font-bold shadow-sm">
+                                        {plane.id}
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="p-6 flex-grow flex flex-col">
-                                <h3 className="text-xl font-bold text-gray-900 mb-1">{plane.name}</h3>
-                                <p className="text-blue-600 text-sm font-medium mb-3">{plane.type}</p>
-                                <p className="text-gray-600 text-sm flex-grow">{plane.desc}</p>
-                                <div className="mt-4 pt-4 border-t border-gray-100">
-                                    <button className="text-blue-600 text-sm font-medium hover:text-blue-800 flex items-center gap-1">
-                                        Technische Daten <ChevronRight size={14}/>
-                                    </button>
+                                <div className="p-6 flex-grow flex flex-col">
+                                    <h3 className="text-xl font-bold text-gray-900 mb-1">{plane.name}</h3>
+                                    <p className="text-blue-600 text-sm font-medium mb-3">{plane.type}</p>
+                                    <p className="text-gray-600 text-sm flex-grow mb-4">{plane.desc}</p>
+                                    
+                                    <div className="mt-auto pt-4 border-t border-gray-100">
+                                        <button 
+                                            onClick={() => toggleDetails(idx)}
+                                            className="text-blue-600 text-sm font-medium hover:text-blue-800 flex items-center gap-1 w-full"
+                                        >
+                                            {expandedId === idx ? (
+                                                <>Weniger Details <ChevronUp size={14}/></>
+                                            ) : (
+                                                <>Technische Daten <ChevronRight size={14}/></>
+                                            )}
+                                        </button>
+                                        
+                                        {/* Detail Bereich für Technische Daten */}
+                                        {expandedId === idx && (
+                                            <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-100 animate-fadeIn text-sm">
+                                                <h4 className="font-bold text-gray-800 mb-2 border-b border-gray-200 pb-1">Daten</h4>
+                                                <dl className="grid grid-cols-2 gap-x-2 gap-y-1">
+                                                    {plane.specs && plane.specs.map((spec, i) => (
+                                                        <React.Fragment key={i}>
+                                                            <dt className="text-gray-500">{spec.label}:</dt>
+                                                            <dd className="font-medium text-gray-900 text-right">{spec.value}</dd>
+                                                        </React.Fragment>
+                                                    ))}
+                                                </dl>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        </Card>
-                    ))}
+                            </Card>
+                        ))}
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        };
 
         const TrainingPage = () => (
             <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
