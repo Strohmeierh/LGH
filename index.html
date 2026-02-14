@@ -575,7 +575,7 @@
                 </div>
 
                 <div className="max-w-6xl mx-auto px-4">
-                    <SectionHeading title="Aktuelles vom Verein" subtitle="Termine & Veranstaltungen 2026" />
+                    <SectionHeading title="Aktuelles" subtitle="Termine & Veranstaltungen 2026" />
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {siteContent.pages.home.news.map((item, idx) => (
                             <Card key={idx} className={`p-6 flex flex-col justify-between ${item.highlight ? 'ring-2 ring-blue-500 bg-blue-50' : ''}`}>
@@ -1160,6 +1160,11 @@
             const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
             const [scrolled, setScrolled] = useState(false);
 
+            // Scroll to top whenever currentPage changes
+            useEffect(() => {
+                window.scrollTo(0, 0);
+            }, [currentPage]);
+
             useEffect(() => {
                 const handleScroll = () => setScrolled(window.scrollY > 20);
                 window.addEventListener('scroll', handleScroll);
@@ -1276,8 +1281,8 @@
                             <div>
                                 <h4 className="text-white font-bold mb-4">Quick Links</h4>
                                 <ul className="space-y-2 text-sm">
-                                    <li className="hover:text-white cursor-pointer transition">Mitglied werden</li>
-                                    <li className="hover:text-white cursor-pointer transition">Gastflüge & Gutscheine</li>
+                                    <li onClick={() => setCurrentPage('membership')} className="hover:text-white cursor-pointer transition">Mitglied werden</li>
+                                    <li onClick={() => setCurrentPage('guestflight')} className="hover:text-white cursor-pointer transition">Gastflüge & Gutscheine</li>
                                     <li className="hover:text-white cursor-pointer transition">
                                         <a href="http://www.lgh-platz.de/cam/cam31.jpg" target="_blank" rel="noopener noreferrer">Webcam</a>
                                     </li>
