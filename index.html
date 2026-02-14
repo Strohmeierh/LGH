@@ -494,14 +494,43 @@
                     }
                 ],
                 training: {
-                    title: "Fliegen lernen",
-                    intro: "Der Traum vom Fliegen kann wahr werden. Wir bilden Segelflugpiloten (SPL) ehrenamtlich aus.",
+                    title: "Deine Ausbildung zum Piloten",
+                    intro: "Bock auf Abenteuer? Heb ab mit uns! Hier erfährst du, wie du vom Fußgänger zum Piloten wirst. Segelfliegen ist Teamwork, High-Tech und Natur pur.",
                     // steps now just strings/data, rendered in component for interactivity
                     steps: [
-                        { id: 'schnupper', title: "Schnupperkurs", text: "Wir bieten regelmäßig Schnupperkurse an. Der nächste Termin ist der Schnupperflugtag am 02.05.2026." },
-                        { title: "Die Ausbildung", text: "Praktische Schulung im Doppelsitzer bis zum ersten Alleinflug." },
-                        { title: "Theorie", text: "Unterricht in 9 Fächern (u.a. Luftrecht, Meteorologie, Navigation, Technik)." }, // Placeholder, rendered fully in component
-                        { title: "Lizenz", text: "Nach der Prüfung hältst du deine weltweite Lizenz in den Händen." }
+                        {
+                             title: "1. Check-In (Voraussetzungen)",
+                             text: "Du bist mindestens 14 Jahre alt (oder wirst es bald)? Du bist gesundheitlich fit? Perfekt! Ein Fliegerarzt bestätigt deine Tauglichkeit (Medical). Mehr brauchst du für den Start nicht – außer Bock auf Teamwork, denn Segelfliegen geht nur gemeinsam."
+                        },
+                        {
+                             id: 'schnupper',
+                             title: "2. Reinschnuppern",
+                             text: "Bevor du dich entscheidest, probier es einfach aus! Komm zu unserem Schnupperflugtag am 02.05.2026. Da erlebst du den Betrieb hautnah und hebst selbst ab."
+                        },
+                        {
+                             title: "3. Die Praxis (Airtime)",
+                             text: "Es geht direkt ins Cockpit! Auf dem Doppelsitzer (ASK 21) lernst du mit Fluglehrer das Steuern. Starten, Landen, Thermik kurbeln. Irgendwann kommt der große Tag: Dein erster Alleinflug. Das Gefühl vergisst du nie!"
+                        },
+                        {
+                             id: 'theorie',
+                             title: "4. Die Theorie (Brainfood)",
+                             text: "Im Winter, wenn die Flieger gewartet werden, machen wir dich fit im Kopf. Das ist spannender als Schule, denn hier lernst du, wie das Wetter funktioniert und warum ein Flugzeug fliegt. Die 9 Fächer sind:",
+                             subjects: [ "Luftrecht", "Menschliches Leistungsvermögen", "Meteorologie", "Kommunikation", "Grundlagen des Fliegens", "Betriebliche Verfahren", "Flugleistung & Planung", "Allgemeine Luftfahrzeugkunde", "Navigation" ]
+                        },
+                        {
+                             title: "5. Die Lizenz (SPL)",
+                             text: "Mit frühestens 16 Jahren kannst du die Prüfung ablegen. Mit der SPL-Lizenz in der Tasche steht dir der Himmel offen. Du kannst Streckenflüge machen, an Wettbewerben teilnehmen oder Freunde mitnehmen."
+                        }
+                    ]
+                },
+                fees: {
+                    title: "Gebühren & Kosten",
+                    intro: "Segelfliegen ist günstiger als man denkt. Hier eine Übersicht unserer aktuellen Gebühren.",
+                    list: [
+                        { item: "Mitgliedsbeitrag Aktiv (Erwachsene)", price: "XX,00 € / Monat" },
+                        { item: "Mitgliedsbeitrag Jugend", price: "XX,00 € / Monat" },
+                        { item: "Windenstart", price: "X,00 €" },
+                        { item: "Flugminute Segelflug", price: "0,XX €" }
                     ]
                 }
             }
@@ -827,21 +856,17 @@
                                             Schnupperflugtag am 02.05.2026
                                         </span>.
                                     </div>
-                                ) : step.title === "Theorie" ? (
+                                ) : step.subjects ? (
                                     // Sonderbehandlung für Theorie mit Liste
                                     <div className="text-gray-600 leading-relaxed">
-                                        <p className="mb-2">Im Winter findet der theoretische Unterricht in folgenden 9 Fächern statt:</p>
-                                        <ul className="list-disc pl-5 space-y-1 text-sm">
-                                            <li>Luftrecht</li>
-                                            <li>Menschliches Leistungsvermögen</li>
-                                            <li>Meteorologie (Wetterkunde)</li>
-                                            <li>Kommunikation (Sprechfunk)</li>
-                                            <li>Grundlagen des Fliegens (Aerodynamik)</li>
-                                            <li>Betriebliche Verfahren</li>
-                                            <li>Flugleistung und Flugplanung</li>
-                                            <li>Allgemeine Luftfahrzeugkunde</li>
-                                            <li>Navigation</li>
-                                        </ul>
+                                        <p className="mb-3">{step.text}</p>
+                                        <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                            <ul className="list-disc pl-5 space-y-1 text-sm text-gray-800">
+                                                {step.subjects.map((subj, sIdx) => (
+                                                    <li key={sIdx}>{subj}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
                                     </div>
                                 ) : (
                                     <div className="text-gray-600 leading-relaxed">{step.text}</div>
@@ -1075,6 +1100,85 @@
             );
         };
 
+        const GuestFlightPage = () => {
+            const [formData, setFormData] = useState({ name: '', email: '', phone: '', date: '', persons: '1', message: '' });
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                const subject = encodeURIComponent(`Anfrage Schnupperflug von ${formData.name}`);
+                const body = encodeURIComponent(
+                    `Anfrage für einen Schnupperflug\n\n` +
+                    `Name: ${formData.name}\n` +
+                    `Email: ${formData.email}\n` +
+                    `Telefon: ${formData.phone}\n` +
+                    `Wunschtermin: ${formData.date}\n` +
+                    `Anzahl Personen: ${formData.persons}\n\n` +
+                    `Nachricht:\n${formData.message}`
+                );
+                window.location.href = `mailto:info@lg-hotzenwald.de?subject=${subject}&body=${body}`;
+            };
+
+            const handleChange = (e) => {
+                setFormData({ ...formData, [e.target.name]: e.target.value });
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+                    <SectionHeading title="Schnupperflug" subtitle="Erlebe den Schwarzwald von oben" />
+                    
+                    <div className="grid md:grid-cols-2 gap-12">
+                        <div className="space-y-6">
+                            <p className="text-lg text-gray-700">
+                                Ein Flug über den Hotzenwald und den Südschwarzwald ist ein unvergessliches Erlebnis. 
+                                Ob als Geschenk oder für dich selbst – genieße die Aussicht aus dem Cockpit.
+                            </p>
+                            <div className="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                                <h3 className="text-xl font-bold text-gray-900 mb-4">Infos zum Schnupperflug</h3>
+                                <ul className="space-y-3 text-sm">
+                                    <li className="flex items-start gap-2"><Check className="text-blue-600 mt-1"/> <span>Erfahrene Piloten</span></li>
+                                    <li className="flex items-start gap-2"><Check className="text-blue-600 mt-1"/> <span>Dauer je nach Thermik und Wunsch</span></li>
+                                    <li className="flex items-start gap-2"><Check className="text-blue-600 mt-1"/> <span>Möglich an Wochenenden & Feiertagen (bei gutem Wetter)</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <Card className="p-8">
+                            <form className="space-y-4" onSubmit={handleSubmit}>
+                                <h3 className="text-xl font-bold mb-4">Schnupperflug anfragen</h3>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                    <input type="text" name="name" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
+                                        <input type="tel" name="phone" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required/>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Anzahl Personen</label>
+                                        <input type="number" name="persons" min="1" max="3" value={formData.persons} onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">E-Mail</label>
+                                    <input type="email" name="email" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Wunschtermin (ca.)</label>
+                                    <input type="date" name="date" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Nachricht / Gutschein?</label>
+                                    <textarea rows="3" name="message" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Hast du einen Gutschein?"></textarea>
+                                </div>
+                                <Button className="w-full">Anfrage senden</Button>
+                            </form>
+                        </Card>
+                    </div>
+                </div>
+            );
+        };
+
         const ImpressumPage = () => (
              <div className="max-w-3xl mx-auto px-4 py-8 animate-fadeIn text-gray-700">
                 <SectionHeading title="Impressum" />
@@ -1213,11 +1317,6 @@
             const [currentPage, setCurrentPage] = useState('home');
             const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
             const [scrolled, setScrolled] = useState(false);
-
-            // Scrollt bei jedem Seitenwechsel automatisch nach oben
-            useEffect(() => {
-                window.scrollTo(0, 0);
-            }, [currentPage]);
 
             useEffect(() => {
                 const handleScroll = () => setScrolled(window.scrollY > 20);
