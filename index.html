@@ -91,7 +91,7 @@
                 { id: 'fleet', label: 'Flugzeugpark' },
                 { id: 'training', label: 'Ausbildung' },
                 { id: 'competition', label: 'Hotzenwaldwettbewerb' },
-                { id: 'history', label: 'Chronik' }, // Chronik nach Wettbewerb verschoben
+                { id: 'history', label: 'Chronik' },
                 { id: 'contact', label: 'Kontakt' }
             ],
             pages: {
@@ -360,46 +360,12 @@
                 training: {
                     title: "Fliegen lernen",
                     intro: "Der Traum vom Fliegen kann wahr werden. Wir bilden Segelflugpiloten (SPL) ehrenamtlich aus.",
+                    // steps now just strings/data, rendered in component for interactivity
                     steps: [
-                        { title: "Schnupperkurs", text: (
-                            <span>
-                                Wir bieten regelmäßig Schnupperkurse an. Der nächste Termin ist der 
-                                <span 
-                                    className="text-blue-600 font-bold cursor-pointer hover:underline ml-1"
-                                    onClick={() => setCurrentPage('schnupperflugtag')}
-                                >
-                                    Schnupperflugtag am 02.05.2026
-                                </span>.
-                            </span>
-                        )},
+                        { id: 'schnupper', title: "Schnupperkurs", text: "Wir bieten regelmäßig Schnupperkurse an. Der nächste Termin ist der Schnupperflugtag am 02.05.2026." },
                         { title: "Die Ausbildung", text: "Praktische Schulung im Doppelsitzer bis zum ersten Alleinflug." },
-                        { title: "Theorie", text: (
-                            <div>
-                                <p className="mb-2">Im Winter findet der theoretische Unterricht in folgenden 9 Fächern statt:</p>
-                                <ul className="list-disc pl-5 space-y-1 text-sm">
-                                    <li>Luftrecht</li>
-                                    <li>Menschliches Leistungsvermögen</li>
-                                    <li>Meteorologie (Wetterkunde)</li>
-                                    <li>Kommunikation (Sprechfunk)</li>
-                                    <li>Grundlagen des Fliegens (Aerodynamik)</li>
-                                    <li>Betriebliche Verfahren</li>
-                                    <li>Flugleistung und Flugplanung</li>
-                                    <li>Allgemeine Luftfahrzeugkunde</li>
-                                    <li>Navigation</li>
-                                </ul>
-                            </div>
-                        )},
+                        { title: "Theorie", text: "Unterricht in 9 Fächern (u.a. Luftrecht, Meteorologie, Navigation, Technik)." }, // Placeholder, rendered fully in component
                         { title: "Lizenz", text: "Nach der Prüfung hältst du deine weltweite Lizenz in den Händen." }
-                    ]
-                },
-                fees: {
-                    title: "Gebühren & Kosten",
-                    intro: "Segelfliegen ist günstiger als man denkt. Hier eine Übersicht unserer aktuellen Gebühren.",
-                    list: [
-                        { item: "Mitgliedsbeitrag Aktiv (Erwachsene)", price: "XX,00 € / Monat" },
-                        { item: "Mitgliedsbeitrag Jugend", price: "XX,00 € / Monat" },
-                        { item: "Windenstart", price: "X,00 €" },
-                        { item: "Flugminute Segelflug", price: "0,XX €" }
                     ]
                 }
             }
@@ -438,13 +404,13 @@
         // --- SEITEN (PAGES) ---
 
         const HomePage = ({ setCurrentPage }) => {
-            // Live Webcam Refresh Logic
-            const [webcamUrl, setWebcamUrl] = useState("http://www.lgh-platz.de/cam/cam31.jpg");
-            const [webcamError, setWebcamError] = useState(false);
+            // Live Webcam Refresh Logic with Secure Proxy
+            const [webcamUrl, setWebcamUrl] = useState("https://wsrv.nl/?url=www.lgh-platz.de/cam/cam31.jpg");
             
             useEffect(() => {
                 const interval = setInterval(() => {
-                    setWebcamUrl(`http://www.lgh-platz.de/cam/cam31.jpg?t=${new Date().getTime()}`);
+                    // Update timestamp to prevent caching
+                    setWebcamUrl(`https://wsrv.nl/?url=www.lgh-platz.de/cam/cam31.jpg&t=${new Date().getTime()}`);
                 }, 60000); // Refresh every 60 seconds
                 return () => clearInterval(interval);
             }, []);
@@ -462,10 +428,10 @@
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">{siteContent.pages.home.heroTitle}</h1>
                         <p className="text-xl md:text-2xl mb-8 max-w-2xl drop-shadow-md">{siteContent.pages.home.heroSubtitle}</p>
                         <div className="flex gap-4 flex-col sm:flex-row">
-                            <button className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition shadow-lg">
+                            <button onClick={() => setCurrentPage('guestflight')} className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition shadow-lg">
                                 Mitfliegen
                             </button>
-                            <button className="px-8 py-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white text-white rounded-lg font-semibold transition shadow-lg">
+                            <button onClick={() => setCurrentPage('membership')} className="px-8 py-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white text-white rounded-lg font-semibold transition shadow-lg">
                                 Mitglied werden
                             </button>
                         </div>
@@ -518,37 +484,28 @@
                         </a>
 
                         {/* Webcam Widget */}
-                        <a href="http://www.lgh-platz.de/cam/cam31.jpg" target="_blank" rel="noopener noreferrer" className="block">
+                        <div className="block h-full">
                             <Card className="bg-gray-100 border-gray-200 h-full hover:shadow-md transition-shadow cursor-pointer group overflow-hidden relative min-h-[250px] flex flex-col">
                                 <div className="relative h-full w-full flex-grow bg-black flex items-center justify-center">
-                                    {/* Bild der Webcam - Vollständig angezeigt mit object-contain */}
-                                    {!webcamError ? (
-                                        <img 
-                                            src={webcamUrl}
-                                            alt="Live Webcam" 
-                                            className="max-h-full max-w-full object-contain"
-                                            onError={() => setWebcamError(true)}
-                                        />
-                                    ) : (
-                                        <div className="text-white text-center p-4">
-                                            <Camera size={48} className="mx-auto mb-2 opacity-50"/>
-                                            <p>Vorschau nicht verfügbar.</p>
-                                            <p className="text-sm text-gray-400 mt-1">Hier klicken zum Öffnen</p>
-                                        </div>
-                                    )}
+                                    {/* Bild der Webcam - Gesichert via Proxy */}
+                                    <img 
+                                        src={webcamUrl}
+                                        alt="Live Webcam" 
+                                        className="max-h-full max-w-full object-contain"
+                                    />
                                     
-                                    <div className="absolute bottom-0 left-0 p-6 w-full bg-gradient-to-t from-black/80 to-transparent">
+                                    <div className="absolute bottom-0 left-0 p-6 w-full bg-gradient-to-t from-black/80 to-transparent pointer-events-none">
                                          <div className="flex items-center gap-2 text-white font-bold mb-1">
                                             <Camera size={24} />
                                             <span>Webcam</span>
                                         </div>
-                                        <div className="flex items-center text-blue-300 text-sm font-medium group-hover:underline group-hover:text-blue-200 mt-2">
+                                        <a href="http://www.lgh-platz.de/cam/cam31.jpg" target="_blank" rel="noopener noreferrer" className="flex items-center text-blue-300 text-sm font-medium hover:underline hover:text-blue-200 mt-2 pointer-events-auto">
                                             Live-Bild ansehen <ExternalLink size={14} className="ml-1"/>
-                                        </div>
+                                        </a>
                                     </div>
                                 </div>
                             </Card>
-                        </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -707,9 +664,38 @@
                             <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xl group-hover:bg-blue-600 group-hover:text-white transition-colors">
                                 {idx + 1}
                             </div>
-                            <div>
+                            <div className="w-full">
                                 <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
-                                <div className="text-gray-600 leading-relaxed">{step.text}</div>
+                                {/* Sonderbehandlung für Schnupperkurs mit Link */}
+                                {step.id === 'schnupper' ? (
+                                    <div className="text-gray-600 leading-relaxed">
+                                        Wir bieten regelmäßig Schnupperkurse an. Der nächste Termin ist der{' '}
+                                        <span 
+                                            className="text-blue-600 font-bold cursor-pointer hover:underline"
+                                            onClick={() => setCurrentPage('schnupperflugtag')}
+                                        >
+                                            Schnupperflugtag am 02.05.2026
+                                        </span>.
+                                    </div>
+                                ) : step.title === "Theorie" ? (
+                                    // Sonderbehandlung für Theorie mit Liste
+                                    <div className="text-gray-600 leading-relaxed">
+                                        <p className="mb-2">Im Winter findet der theoretische Unterricht in folgenden 9 Fächern statt:</p>
+                                        <ul className="list-disc pl-5 space-y-1 text-sm">
+                                            <li>Luftrecht</li>
+                                            <li>Menschliches Leistungsvermögen</li>
+                                            <li>Meteorologie (Wetterkunde)</li>
+                                            <li>Kommunikation (Sprechfunk)</li>
+                                            <li>Grundlagen des Fliegens (Aerodynamik)</li>
+                                            <li>Betriebliche Verfahren</li>
+                                            <li>Flugleistung und Flugplanung</li>
+                                            <li>Allgemeine Luftfahrzeugkunde</li>
+                                            <li>Navigation</li>
+                                        </ul>
+                                    </div>
+                                ) : (
+                                    <div className="text-gray-600 leading-relaxed">{step.text}</div>
+                                )}
                             </div>
                         </div>
                     ))}
@@ -777,8 +763,6 @@
             </div>
         );
 
-        /* FeesPage entfernt */
-
         const ContactPage = () => {
             const [formData, setFormData] = useState({ name: '', email: '', message: '' });
 
@@ -786,7 +770,7 @@
                 e.preventDefault();
                 const subject = encodeURIComponent(`Anfrage von ${formData.name} via LGH Webseite`);
                 const body = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nNachricht:\n${formData.message}`);
-                window.location.href = `mailto:hubert.strohmeier@gmail.com?subject=${subject}&body=${body}`;
+                window.location.href = `mailto:info@lg-hotzenwald.de?subject=${subject}&body=${body}`;
             };
 
             const handleChange = (e) => {
@@ -859,8 +843,169 @@
                                     required
                                 ></textarea>
                             </div>
-                            <Button className="w-full">Nachricht senden (Mailprogramm öffnen)</Button>
+                            <Button className="w-full">Nachricht senden</Button>
                         </form>
+                    </div>
+                </div>
+            );
+        };
+
+        const MembershipPage = () => {
+            const [formData, setFormData] = useState({ name: '', email: '', phone: '', address: '', dob: '', message: '' });
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                const subject = encodeURIComponent(`Mitgliedschaftsanfrage von ${formData.name}`);
+                const body = encodeURIComponent(
+                    `Interesse an einer Mitgliedschaft\n\n` +
+                    `Name: ${formData.name}\n` +
+                    `Adresse: ${formData.address}\n` +
+                    `Geburtsdatum: ${formData.dob}\n` +
+                    `Email: ${formData.email}\n` +
+                    `Telefon: ${formData.phone}\n\n` +
+                    `Nachricht:\n${formData.message}`
+                );
+                window.location.href = `mailto:info@lg-hotzenwald.de?subject=${subject}&body=${body}`;
+            };
+
+            const handleChange = (e) => {
+                setFormData({ ...formData, [e.target.name]: e.target.value });
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+                    <SectionHeading title="Mitglied werden" subtitle="Werde Teil unserer Fliegergemeinschaft!" />
+                    
+                    <div className="grid md:grid-cols-2 gap-12">
+                        <div className="space-y-6">
+                            <p className="text-lg text-gray-700">
+                                Wir freuen uns immer über neue Gesichter! Egal ob du schon Pilot bist oder das Fliegen erst lernen möchtest – bei uns bist du herzlich willkommen.
+                            </p>
+                            <div className="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                                <h3 className="text-xl font-bold text-gray-900 mb-4">Deine Vorteile</h3>
+                                <ul className="space-y-3">
+                                    <li className="flex items-start gap-2"><Check className="text-blue-600 mt-1"/> <span>Ehrenamtliche Ausbildung zum Selbstkostenpreis</span></li>
+                                    <li className="flex items-start gap-2"><Check className="text-blue-600 mt-1"/> <span>Zugriff auf unseren modernen Flugzeugpark</span></li>
+                                    <li className="flex items-start gap-2"><Check className="text-blue-600 mt-1"/> <span>Tolle Gemeinschaft und Vereinsleben</span></li>
+                                    <li className="flex items-start gap-2"><Check className="text-blue-600 mt-1"/> <span>Traumhafte Lage im Südschwarzwald</span></li>
+                                </ul>
+                            </div>
+                            <p className="text-gray-600 text-sm">
+                                Fülle einfach das Formular aus, um unverbindlich Informationen zur Mitgliedschaft anzufordern. Wir melden uns schnellstmöglich bei dir.
+                            </p>
+                        </div>
+
+                        <Card className="p-8">
+                            <form className="space-y-4" onSubmit={handleSubmit}>
+                                <h3 className="text-xl font-bold mb-4">Interesse bekunden</h3>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                    <input type="text" name="name" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Anschrift</label>
+                                    <input type="text" name="address" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Geburtsdatum</label>
+                                        <input type="date" name="dob" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
+                                        <input type="tel" name="phone" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">E-Mail</label>
+                                    <input type="email" name="email" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Nachricht / Vorkenntnisse</label>
+                                    <textarea rows="3" name="message" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Hast du schon eine Lizenz?"></textarea>
+                                </div>
+                                <Button className="w-full">Antrag anfordern</Button>
+                            </form>
+                        </Card>
+                    </div>
+                </div>
+            );
+        };
+
+        const GuestFlightPage = () => {
+            const [formData, setFormData] = useState({ name: '', email: '', phone: '', date: '', persons: '1', message: '' });
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                const subject = encodeURIComponent(`Anfrage Schnupperflug von ${formData.name}`);
+                const body = encodeURIComponent(
+                    `Anfrage für einen Schnupperflug\n\n` +
+                    `Name: ${formData.name}\n` +
+                    `Email: ${formData.email}\n` +
+                    `Telefon: ${formData.phone}\n` +
+                    `Wunschtermin: ${formData.date}\n` +
+                    `Anzahl Personen: ${formData.persons}\n\n` +
+                    `Nachricht:\n${formData.message}`
+                );
+                window.location.href = `mailto:info@lg-hotzenwald.de?subject=${subject}&body=${body}`;
+            };
+
+            const handleChange = (e) => {
+                setFormData({ ...formData, [e.target.name]: e.target.value });
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+                    <SectionHeading title="Schnupperflug" subtitle="Erlebe den Schwarzwald von oben" />
+                    
+                    <div className="grid md:grid-cols-2 gap-12">
+                        <div className="space-y-6">
+                            <p className="text-lg text-gray-700">
+                                Ein Flug über den Hotzenwald und den Südschwarzwald ist ein unvergessliches Erlebnis. 
+                                Ob als Geschenk oder für dich selbst – genieße die Aussicht aus dem Cockpit.
+                            </p>
+                            <div className="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                                <h3 className="text-xl font-bold text-gray-900 mb-4">Infos zum Schnupperflug</h3>
+                                <ul className="space-y-3 text-sm">
+                                    <li className="flex items-start gap-2"><Check className="text-blue-600 mt-1"/> <span>Erfahrene Piloten</span></li>
+                                    <li className="flex items-start gap-2"><Check className="text-blue-600 mt-1"/> <span>Dauer je nach Thermik und Wunsch</span></li>
+                                    <li className="flex items-start gap-2"><Check className="text-blue-600 mt-1"/> <span>Möglich an Wochenenden & Feiertagen (bei gutem Wetter)</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <Card className="p-8">
+                            <form className="space-y-4" onSubmit={handleSubmit}>
+                                <h3 className="text-xl font-bold mb-4">Schnupperflug anfragen</h3>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                    <input type="text" name="name" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
+                                        <input type="tel" name="phone" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required/>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Anzahl Personen</label>
+                                        <input type="number" name="persons" min="1" max="3" value={formData.persons} onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">E-Mail</label>
+                                    <input type="email" name="email" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Wunschtermin (ca.)</label>
+                                    <input type="date" name="date" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Nachricht / Gutschein?</label>
+                                    <textarea rows="3" name="message" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Hast du einen Gutschein?"></textarea>
+                                </div>
+                                <Button className="w-full">Anfrage senden</Button>
+                            </form>
+                        </Card>
                     </div>
                 </div>
             );
@@ -949,10 +1094,10 @@
                             <ul className="space-y-3">
                                 <li>• Sicherheitseinweisung & Briefing</li>
                                 <li>• Vorstellung der Flugzeuge & Technik</li>
-                                <li>• <strong>Ein Start an der Winde</strong> mit erfahrenem Fluglehrer</li>
+                                <li>• Start an der Winde mit erfahrenem Fluglehrer</li>
                                 <li>• Möglichkeit, selbst das Steuer zu übernehmen</li>
                                 <li>• Diverse Vorträge rund ums Fliegen</li>
-                                <li>• Gemeinsames Mittagessen (Grillwurst) & Getränke inklusive</li>
+                                <li>• Nach dem Flugbetrieb Grillwurst und Getränk zum Ausklang des Tages</li>
                             </ul>
                         </div>
                         
@@ -1019,7 +1164,9 @@
                     case 'fleet': return <FleetPage />;
                     case 'training': return <TrainingPage setCurrentPage={setCurrentPage} />;
                     case 'fees': return <FeesPage />;
-                    case 'competition': return <CompetitionPage />; // Neuer Case
+                    case 'competition': return <CompetitionPage />; 
+                    case 'membership': return <MembershipPage />; // Neuer Case
+                    case 'guestflight': return <GuestFlightPage />; // Neuer Case
                     case 'contact': return <ContactPage />;
                     case 'impressum': return <ImpressumPage />;
                     case 'datenschutz': return <DatenschutzPage />;
@@ -1060,7 +1207,7 @@
                                         {item.label}
                                     </button>
                                 ))}
-                                <Button variant="primary" className="ml-4 text-sm px-4 py-2">Mitglied werden</Button>
+                                <Button onClick={() => setCurrentPage('membership')} variant="primary" className="ml-4 text-sm px-4 py-2">Mitglied werden</Button>
                             </nav>
 
                             <button 
