@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LG Hotzenwald e.V.</title>
+    <title>Luftsportgemeinschaft Hotzenwald e.V.</title>
     
     <!-- Tailwind CSS für das Design -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -39,7 +39,7 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // --- ICONS (Direkt eingebaut, damit keine externen Abhängigkeiten nötig sind) ---
+        // --- ICONS ---
         const Icon = ({ children, size = 24, className = "" }) => (
             <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
                 {children}
@@ -57,17 +57,22 @@
         const ChevronUp = (props) => <Icon {...props}><path d="m18 15-6-6-6 6"/></Icon>;
         const Cloud = (props) => <Icon {...props}><path d="M17.5 19c0 2.167-1.697 3.925-3.868 4.002L12 23h-3.5c-3.038 0-5.5-2.462-5.5-5.5 0-2.486 1.637-4.606 3.9-5.263l.314-.09C8.327 7.283 11.237 5 14.5 5c3.59 0 6.5 2.91 6.5 6.5 0 .234-.012.466-.035.696C20.96 12.28 23 14.363 23 17a4.002 4.002 0 0 1-3.998 4h-.002z"/></Icon>;
         const Info = (props) => <Icon {...props}><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></Icon>;
-        const Plane = (props) => <Icon {...props}><path d="M2 22h20"/><path d="M20.4 14.2 13.5 2 11.1 2l2.4 12.2L6 18l-1.5-1.5L2.9 18l5.8 4h11.7Z"/></Icon>;
+        const Facebook = (props) => <Icon {...props}><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></Icon>;
+        const Camera = (props) => <Icon {...props}><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></Icon>;
+        const ExternalLink = (props) => <Icon {...props}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></Icon>;
+
 
         // --- KONFIGURATION (HIER TEXTE ÄNDERN) ---
         const siteContent = {
             general: {
-                name: "LG Hotzenwald e.V.",
-                fullName: "Luftsportgemeinschaft Hotzenwald e.V.",
+                name: "Luftsportgemeinschaft Hotzenwald e.V.",
                 location: "Flugplatz Hütten",
-                frequency: "123.450 MHz",
+                address: "Rüttehof 3, 79736 Rickenbach",
+                phone: "+49 7765 8588",
+                frequency: "125.815 MHz",
                 contactEmail: "info@lg-hotzenwald.de",
-                elevation: "880m MSL"
+                elevation: "880m MSL",
+                facebookLink: "https://www.facebook.com/LGHev"
             },
             status: {
                 isOpen: true,
@@ -87,19 +92,59 @@
                     heroTitle: "Fliegen über dem Südschwarzwald",
                     heroSubtitle: "Willkommen bei der Luftsportgemeinschaft Hotzenwald e.V. auf dem Flugplatz Hütten.",
                     news: [
-                        { date: "12.04.2024", title: "Saisonstart 2024", text: "Wir starten in die neue Saison. Die Flugzeuge sind gewartet und startklar." },
-                        { date: "28.03.2024", title: "Jahreshauptversammlung", text: "Einladung zur JHV im Clubheim am 15. Mai um 19:00 Uhr." }
+                        { 
+                            date: "07.03.2026", 
+                            time: "ab 10:00 Uhr",
+                            title: "Offizieller Saisonstart 2026", 
+                            text: "Wir starten in die neue Flugsaison! Geplant sind Schulbetrieb und Windenstarts für alle Mitglieder.",
+                            highlight: false 
+                        },
+                        { 
+                            date: "13.03.2026", 
+                            time: "ab 19:30 Uhr",
+                            title: "Ordentliche Mitgliederversammlung", 
+                            text: "Die JHV der LGH 2026 findet im Briefing- und Schulungsraum am Flugplatz Hütten-Hotzenwald statt.",
+                            highlight: false 
+                        },
+                        { 
+                            date: "02.05.2026", 
+                            time: "Ganztägig",
+                            title: "Schnupperflugtag", 
+                            text: "Erlebe die Faszination des Fliegens hautnah! Ein Tag für alle Interessierten, um den Segelflug kennenzulernen.",
+                            highlight: true 
+                        },
+                        { 
+                            date: "23.-30.05.2026", 
+                            time: "Wettbewerbswoche",
+                            title: "Hotzenwaldwettbewerb", 
+                            text: "Spannende Wettbewerbsflüge über dem Schwarzwald. Zuschauer sind herzlich willkommen.",
+                            highlight: false 
+                        },
+                        { 
+                            date: "14.06.2026", 
+                            time: "ab 10:00 Uhr",
+                            title: "Obligatorisches Pilotenbriefing", 
+                            text: "Sicherheitsunterweisung und Update zu Luftraumstrukturen für alle aktiven Piloten.",
+                            highlight: false 
+                        },
+                        { 
+                            date: "12./13.09.2026", 
+                            time: "Wochenende",
+                            title: "Familiendrachenfest (voraussichtlich)", 
+                            text: "Bunte Drachen am Himmel und Spaß für die ganze Familie auf dem Flugplatzgelände.",
+                            highlight: false 
+                        }
                     ]
                 },
                 airport: {
                     title: "Flugplatz Hütten",
                     description: "Unser Flugplatz liegt malerisch eingebettet in der Landschaft des Hotzenwalds. Er ist der ideale Ausgangspunkt für Flüge über den Schwarzwald, in die Schweiz und zu den Alpen.",
-                    runway: "Grasbahn 26/08, 800m",
+                    runway: "26/08, 670m", // "Grasbahn" hier entfernt, damit es nicht doppelt erscheint
                     facts: [
                         { label: "Höhe", value: "880m MSL" },
-                        { label: "Frequenz", value: "Hotzenwald Radio 123.050" },
-                        { label: "Betriebszeiten", value: "PPR / Sa, So & Feiertags" },
-                        { label: "Startarten", value: "Winde, F-Schlepp (auf Anfrage)" }
+                        { label: "Frequenz", value: "Hotzenwald Radio 125.815" },
+                        { label: "Betriebszeiten", value: "Sa, So & Feiertags" },
+                        { label: "Startarten", value: "Winde, F-Schlepp" }
                     ]
                 },
                 fleet: [
@@ -109,6 +154,21 @@
                         type: "Doppelsitzer", 
                         desc: "Unser robustes Schulungsflugzeug für die Anfängerausbildung und Gastflüge. Gutmütig und kunstflugtauglich.", 
                         image: "public/images/ASK-21-22.jpg",
+                        specs: [
+                            { label: "Spannweite", value: "17,00 m" },
+                            { label: "Gleitzahl", value: "34" },
+                            { label: "Höchstgeschwindigkeit", value: "280 km/h" },
+                            { label: "Leermasse", value: "ca. 360 kg" },
+                            { label: "Max. Abflugmasse", value: "600 kg" },
+                            { label: "Sitzplätze", value: "2" }
+                        ]
+                    },
+                    { 
+                        name: "ASK 21", 
+                        id: "D-3247", 
+                        type: "Doppelsitzer", 
+                        desc: "Unsere zweite ASK 21 sichert einen reibungslosen Schulungsbetrieb und hohe Verfügbarkeit.", 
+                        image: "public/images/ASK-21-11.jpg",
                         specs: [
                             { label: "Spannweite", value: "17,00 m" },
                             { label: "Gleitzahl", value: "34" },
@@ -197,6 +257,22 @@
                             { label: "Motor", value: "Solo 2350 (Turbo)" },
                             { label: "Sitzplätze", value: "1" }
                         ]
+                    },
+                    { 
+                        name: "Super Dimona", 
+                        id: "D-KBKB", 
+                        type: "Reisemotorsegler (TMG)", 
+                        desc: "Die Super Dimona ist ideal für Reiseflüge und die Ausbildung. Ausgestattet mit einem leistungsstarken 100 PS Motor.", 
+                        image: "public/images/D-KBKB.jpg",
+                        specs: [
+                            { label: "Spannweite", value: "16,33 m" },
+                            { label: "Gleitzahl", value: "ca. 27" },
+                            { label: "Reisegeschwindigkeit", value: "ca. 185 km/h" },
+                            { label: "Motor", value: "Rotax 912 S (100 PS)" },
+                            { label: "Tankinhalt", value: "80 l" },
+                            { label: "Reichweite", value: "ca. 800 km" },
+                            { label: "Sitzplätze", value: "2" }
+                        ]
                     }
                 ],
                 training: {
@@ -278,32 +354,66 @@
                 </div>
 
                 <div className="max-w-6xl mx-auto px-4">
-                    <SectionHeading title="Aktuelles vom Verein" subtitle="Neuigkeiten rund um den Flugbetrieb und das Vereinsleben." />
+                    <SectionHeading title="Aktuelles vom Verein" subtitle="Termine & Veranstaltungen 2026" />
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {siteContent.pages.home.news.map((item, idx) => (
-                            <Card key={idx} className="p-6">
-                                <div className="text-sm text-blue-600 font-semibold mb-2">{item.date}</div>
-                                <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
-                                <p className="text-gray-600">{item.text}</p>
-                                <div className="mt-4 flex items-center text-blue-600 font-medium cursor-pointer hover:underline">
-                                    Mehr lesen <ArrowRight size={16} className="ml-2" />
+                            <Card key={idx} className={`p-6 flex flex-col justify-between ${item.highlight ? 'ring-2 ring-blue-500 bg-blue-50' : ''}`}>
+                                <div>
+                                    <div className="flex justify-between items-start mb-2">
+                                        <div className="text-sm text-blue-600 font-bold">{item.date}</div>
+                                        <div className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">{item.time}</div>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
+                                    <p className="text-gray-600 text-sm leading-relaxed">{item.text}</p>
                                 </div>
+                                {item.highlight && (
+                                    <div className="mt-4 text-xs font-bold text-blue-600 uppercase tracking-wider">
+                                        Nicht verpassen!
+                                    </div>
+                                )}
                             </Card>
                         ))}
-                        <Card className="bg-blue-50 border-blue-100 p-6 flex flex-col justify-between">
-                            <div>
+                        
+                        {/* Wetter Widget */}
+                        <a href="http://www.lgh-platz.de/wetter/index.html" target="_blank" rel="noopener noreferrer" className="block">
+                            <Card className="bg-blue-50 border-blue-100 p-6 h-full hover:bg-blue-100 transition-colors cursor-pointer group">
                                 <div className="flex items-center gap-2 text-blue-800 font-bold mb-4">
                                     <Cloud size={24} />
-                                    <span>Flugwetter Hütten</span>
+                                    <span>Aktuelles Wetter</span>
                                 </div>
-                                <div className="text-4xl font-bold text-gray-800 mb-2">18°C</div>
-                                <p className="text-gray-600">Wind: West 10 km/h</p>
-                                <p className="text-gray-600">Basis: 2200m</p>
-                            </div>
-                            <button className="mt-4 text-sm text-blue-700 font-medium hover:underline text-left">
-                                Detaillierter Wetterbericht &rarr;
-                            </button>
-                        </Card>
+                                <div className="text-4xl font-bold text-gray-800 mb-2">Hier klicken</div>
+                                <p className="text-gray-600">für detaillierte Wetterdaten vom Flugplatz Hütten.</p>
+                                <div className="mt-4 flex items-center text-blue-700 font-medium group-hover:underline">
+                                    Zur Wetterstation <ExternalLink size={16} className="ml-2"/>
+                                </div>
+                            </Card>
+                        </a>
+
+                        {/* Webcam Widget */}
+                        <a href="http://www.lgh-platz.de/cam/cam31.jpg" target="_blank" rel="noopener noreferrer" className="block">
+                            <Card className="bg-white border-gray-200 h-full hover:shadow-md transition-shadow cursor-pointer group overflow-hidden relative min-h-[250px] flex flex-col">
+                                <div className="relative h-full w-full flex-grow bg-gray-100">
+                                    {/* Bild der Webcam */}
+                                    <img 
+                                        src="http://www.lgh-platz.de/cam/cam31.jpg" 
+                                        alt="Live Webcam" 
+                                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                    {/* Overlay für bessere Lesbarkeit */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                                    
+                                    <div className="absolute bottom-0 left-0 p-6 w-full">
+                                         <div className="flex items-center gap-2 text-white font-bold mb-1">
+                                            <Camera size={24} />
+                                            <span>Webcam</span>
+                                        </div>
+                                        <div className="flex items-center text-blue-300 text-sm font-medium group-hover:underline group-hover:text-blue-200 mt-2">
+                                            Live-Bild ansehen <ExternalLink size={14} className="ml-1"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Card>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -330,17 +440,36 @@
                                 ))}
                             </ul>
                         </div>
+                        <div className="pt-4">
+                            <a 
+                                href="https://de.wikipedia.org/wiki/Flugplatz_H%C3%BCtten-Hotzenwald" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center text-blue-600 hover:underline font-medium"
+                            >
+                                <span className="bg-gray-100 p-1 rounded mr-2 text-black font-serif font-bold">W</span>
+                                Weitere Infos auf Wikipedia
+                                <ExternalLink size={14} className="ml-1"/>
+                            </a>
+                        </div>
                     </div>
                     <div className="space-y-6">
-                        <div className="bg-gray-200 rounded-xl h-64 flex items-center justify-center relative overflow-hidden group">
-                            <div className="absolute inset-0 flex items-center justify-center bg-gray-300">
-                                <span className="text-gray-500 font-medium flex items-center gap-2">
-                                    <MapPin size={20}/> Karte / Anfahrtsskizze
+                        <div className="bg-white border border-gray-200 rounded-xl h-64 flex flex-col items-center justify-center relative overflow-hidden group hover:shadow-lg transition-shadow">
+                            <img 
+                                src="public/images/EDSF-Luftbild.jpg" 
+                                alt="Luftbild Flugplatz" 
+                                className="absolute inset-0 w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors"></div>
+                            <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-md shadow-sm">
+                                <span className="text-gray-800 text-sm font-semibold flex items-center gap-2">
+                                    <MapPin size={16}/> Luftbild Flugplatz
                                 </span>
                             </div>
                         </div>
                         <div className="bg-green-800 rounded-xl p-6 text-white text-center shadow-lg relative overflow-hidden">
                             <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[linear-gradient(45deg,transparent_25%,white_25%,white_50%,transparent_50%,transparent_75%,white_75%,white_100%)] bg-[length:20px_20px]"></div>
+                            {/* Nur einmal "Piste..." anzeigen, ohne "Grasbahn" darunter */}
                             <h3 className="relative z-10 text-2xl font-bold mb-1">Piste {siteContent.pages.airport.runway}</h3>
                             <p className="relative z-10 text-green-100">Grasbahn</p>
                         </div>
@@ -350,12 +479,8 @@
         );
 
         const FleetPage = () => {
-            // State für das Auf-/Zuklappen der technischen Daten
             const [expandedId, setExpandedId] = useState(null);
-
-            const toggleDetails = (idx) => {
-                setExpandedId(expandedId === idx ? null : idx);
-            };
+            const toggleDetails = (idx) => setExpandedId(expandedId === idx ? null : idx);
 
             return (
                 <div className="max-w-6xl mx-auto px-4 py-8 animate-fadeIn">
@@ -386,7 +511,6 @@
                                             )}
                                         </button>
                                         
-                                        {/* Detail Bereich für Technische Daten */}
                                         {expandedId === idx && (
                                             <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-100 animate-fadeIn text-sm">
                                                 <h4 className="font-bold text-gray-800 mb-2 border-b border-gray-200 pb-1">Daten</h4>
@@ -471,22 +595,22 @@
                         <h3 className="text-xl font-bold mb-6">Anschrift</h3>
                         <div className="space-y-4">
                             <div className="flex items-start gap-4">
-                                <MapPin className="text-blue-600 mt-1" />
+                                <MapPin className="text-blue-600 mt-1 flex-shrink-0" />
                                 <div>
-                                    <p className="font-semibold">{siteContent.general.fullName}</p>
+                                    <p className="font-semibold">{siteContent.general.name}</p>
                                     <p className="text-gray-600">{siteContent.general.location}</p>
-                                    <p className="text-gray-600">79XXX Rickenbach-Hütten</p>
+                                    <p className="text-gray-600">{siteContent.general.address}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">
-                                <Mail className="text-blue-600" />
+                                <Mail className="text-blue-600 flex-shrink-0" />
                                 <a href={`mailto:${siteContent.general.contactEmail}`} className="text-gray-600 hover:text-blue-600">
                                     {siteContent.general.contactEmail}
                                 </a>
                             </div>
                             <div className="flex items-center gap-4">
-                                <Phone className="text-blue-600" />
-                                <span className="text-gray-600">+49 (0) 7765 XXX XX</span>
+                                <Phone className="text-blue-600 flex-shrink-0" />
+                                <span className="text-gray-600">{siteContent.general.phone}</span>
                             </div>
                         </div>
                     </Card>
@@ -511,6 +635,61 @@
             </div>
         );
 
+        const ImpressumPage = () => (
+             <div className="max-w-3xl mx-auto px-4 py-8 animate-fadeIn text-gray-700">
+                <SectionHeading title="Impressum" />
+                <div className="space-y-6">
+                    <div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">Angaben gemäß § 5 TMG</h3>
+                        <p>{siteContent.general.name}</p>
+                        <p>{siteContent.general.address}</p>
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">Vertreten durch</h3>
+                        <p>1. Vorsitzender: Thomas Brosi</p>
+                        <p>Kassierer: Paul Albietz Kaiser</p>
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">Kontakt</h3>
+                        <p>Telefon: {siteContent.general.phone}</p>
+                        <p>E-Mail: {siteContent.general.contactEmail}</p>
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">Registereintrag</h3>
+                        <p>Eintragung im Vereinsregister.</p>
+                        <p>Registergericht: Amtsgericht Freiburg</p>
+                        <p>Registernummer: VR XXXXX (Muster)</p>
+                    </div>
+                </div>
+             </div>
+        );
+
+        const DatenschutzPage = () => (
+             <div className="max-w-3xl mx-auto px-4 py-8 animate-fadeIn text-gray-700">
+                <SectionHeading title="Datenschutzerklärung" />
+                <div className="space-y-6">
+                    <p className="font-bold">1. Datenschutz auf einen Blick</p>
+                    <p>
+                        Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen.
+                    </p>
+                    <p className="font-bold">2. Allgemeine Hinweise und Pflichtinformationen</p>
+                    <p>
+                        Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.
+                    </p>
+                    <p className="font-bold">3. Datenerfassung auf unserer Website</p>
+                    <p>
+                        <strong>Cookies:</strong> Unsere Internetseiten verwenden teilweise so genannte Cookies. Cookies richten auf Ihrem Rechner keinen Schaden an und enthalten keine Viren.
+                    </p>
+                    <p>
+                        <strong>Server-Log-Dateien:</strong> Der Provider der Seiten erhebt und speichert automatisch Informationen in so genannten Server-Log-Dateien, die Ihr Browser automatisch an uns übermittelt.
+                    </p>
+                    <p>
+                        <strong>Kontaktformular:</strong> Wenn Sie uns per Kontaktformular Anfragen zukommen lassen, werden Ihre Angaben aus dem Anfrageformular inklusive der von Ihnen dort angegebenen Kontaktdaten zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen bei uns gespeichert.
+                    </p>
+                </div>
+             </div>
+        );
+
         // --- HAUPT APP ---
 
         function App() {
@@ -532,12 +711,14 @@
                     case 'training': return <TrainingPage />;
                     case 'fees': return <FeesPage />;
                     case 'contact': return <ContactPage />;
+                    case 'impressum': return <ImpressumPage />;
+                    case 'datenschutz': return <DatenschutzPage />;
                     default: return <HomePage />;
                 }
             };
 
             return (
-                <div className="min-h-screen bg-white font-sans text-gray-900 selection:bg-blue-100">
+                <div className="min-h-screen bg-white font-sans text-gray-900 selection:bg-blue-100 flex flex-col">
                     <div className="bg-gray-900 text-white text-xs py-2 px-4">
                         <div className="max-w-7xl mx-auto flex justify-between items-center">
                             <div className="flex items-center gap-4">
@@ -555,15 +736,15 @@
                     <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-md py-2' : 'bg-white py-4'}`}>
                         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
                             <div 
-                                className="flex items-center gap-3 cursor-pointer group"
+                                className="flex items-center gap-4 cursor-pointer group"
                                 onClick={() => setCurrentPage('home')}
                             >
-                                <div className="bg-blue-600 text-white p-2 rounded-lg group-hover:bg-blue-700 transition-colors">
-                                    <Plane size={24} className="transform -rotate-45" />
-                                </div>
+                                {/* Neues Logo */}
+                                <img src="public/images/LGH-Logo.jpg" alt="Logo LGH" className="h-12 w-auto object-contain" />
+                                
                                 <div>
-                                    <h1 className="text-lg font-bold leading-none tracking-tight">LG Hotzenwald</h1>
-                                    <p className="text-xs text-gray-500 tracking-wide">LUFTSPORTGEMEINSCHAFT</p>
+                                    <h1 className="text-lg font-bold leading-none tracking-tight">{siteContent.general.name}</h1>
+                                    <p className="text-xs text-gray-500 tracking-wide mt-1">FLUGPLATZ HÜTTEN-HOTZENWALD</p>
                                 </div>
                             </div>
 
@@ -614,21 +795,27 @@
                         )}
                     </header>
 
-                    <main className="min-h-[calc(100vh-300px)] py-8">
+                    <main className="flex-grow py-8">
                         {renderContent()}
                     </main>
 
                     <footer className="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
                         <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8">
                             <div className="col-span-1 md:col-span-2">
-                                <h4 className="text-white text-lg font-bold mb-4">{siteContent.general.fullName}</h4>
+                                <h4 className="text-white text-lg font-bold mb-4">{siteContent.general.name}</h4>
                                 <p className="max-w-sm mb-6 text-sm leading-relaxed">
                                     Wir sind dein Verein für Segelflug im Südschwarzwald.
                                     Erlebe die Faszination des lautlosen Fliegens in einer einzigartigen Gemeinschaft.
                                 </p>
                                 <div className="flex gap-4">
-                                   <div className="w-8 h-8 bg-gray-800 rounded flex items-center justify-center hover:bg-blue-600 cursor-pointer transition">FB</div>
-                                   <div className="w-8 h-8 bg-gray-800 rounded flex items-center justify-center hover:bg-pink-600 cursor-pointer transition">IG</div>
+                                   <a 
+                                     href={siteContent.general.facebookLink} 
+                                     target="_blank" 
+                                     rel="noopener noreferrer"
+                                     className="w-10 h-10 bg-gray-800 rounded flex items-center justify-center hover:bg-blue-600 text-white cursor-pointer transition"
+                                   >
+                                     <Facebook size={20} />
+                                   </a>
                                 </div>
                             </div>
                             <div>
@@ -636,22 +823,21 @@
                                 <ul className="space-y-2 text-sm">
                                     <li className="hover:text-white cursor-pointer transition">Mitglied werden</li>
                                     <li className="hover:text-white cursor-pointer transition">Gastflüge & Gutscheine</li>
-                                    <li className="hover:text-white cursor-pointer transition">Webcam</li>
-                                    <li className="hover:text-white cursor-pointer transition">PPR Anfrage</li>
+                                    <li className="hover:text-white cursor-pointer transition">
+                                        <a href="http://www.lgh-platz.de/cam/cam31.jpg" target="_blank" rel="noopener noreferrer">Webcam</a>
+                                    </li>
                                 </ul>
                             </div>
                             <div>
                                 <h4 className="text-white font-bold mb-4">Rechtliches</h4>
                                 <ul className="space-y-2 text-sm">
-                                    <li className="hover:text-white cursor-pointer transition">Impressum</li>
-                                    <li className="hover:text-white cursor-pointer transition">Datenschutz</li>
-                                    <li className="hover:text-white cursor-pointer transition">Satzung</li>
-                                    <li className="hover:text-white cursor-pointer transition">Gebührenordnung</li>
+                                    <li onClick={() => setCurrentPage('impressum')} className="hover:text-white cursor-pointer transition">Impressum</li>
+                                    <li onClick={() => setCurrentPage('datenschutz')} className="hover:text-white cursor-pointer transition">Datenschutz</li>
                                 </ul>
                             </div>
                         </div>
                         <div className="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-gray-800 text-center text-xs">
-                            &copy; {new Date().getFullYear()} {siteContent.general.fullName}. Alle Rechte vorbehalten.
+                            &copy; {new Date().getFullYear()} {siteContent.general.name}. Alle Rechte vorbehalten.
                         </div>
                     </footer>
                 </div>
