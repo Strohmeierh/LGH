@@ -1360,17 +1360,160 @@
         const ImpressumPage = () => (
             <div className="max-w-3xl mx-auto px-4 py-8 animate-fadeIn">
                 <SectionHeading title="Impressum" />
-                <Card className="p-8 space-y-4">
-                    <p><strong>{siteContent.general.name}</strong></p>
-                    <p>{siteContent.general.address}</p>
-                    <p><strong>Kontakt:</strong><br/>
-                    Telefon: {siteContent.general.phone}<br/>
-                    E-Mail: {siteContent.general.contactEmail}</p>
-                    <p><strong>Vertreten durch den Vorstand:</strong><br/>
-                    Thomas Brosi</p>
-                    <p><strong>Registergericht:</strong><br/>
-                    Amtsgericht Waldshut-Tiengen<br/>
-                    Registernummer: VR (Nummer)</p>
+                <Card className="p-8 space-y-6">
+                    <div>
+                        <h3 className="font-bold text-lg mb-2">Verantwortlich:</h3>
+                        <p>Luftsportgemeinschaft Hotzenwald e.V.</p>
+                    </div>
+                    
+                    <div>
+                        <h3 className="font-bold text-lg mb-2">Vertreten durch:</h3>
+                        <p>Thomas Brosi und Paul Albiez-Kaiser</p>
+                    </div>
+
+                    <div>
+                        <h3 className="font-bold text-lg mb-2">Kontakt:</h3>
+                        <p>Flugplatz, Rüttehof 3</p>
+                        <p>79736 Rickenbach</p>
+                    </div>
+
+                    <div>
+                        <h3 className="font-bold text-lg mb-2">Vereinsregister-Eintrag:</h3>
+                        <p>Registergericht Freiburg im Breisgau, VR 630306</p>
+                    </div>
+
+                    <div>
+                        <h3 className="font-bold text-lg mb-2">Umsatzsteuer-ID:</h3>
+                        <p>gemäß §27 a Umsatzsteuergesetz: DE142699318</p>
+                    </div>
+
+                    <div>
+                        <h3 className="font-bold text-lg mb-2">Fotos:</h3>
+                        <p>Jens Isele, Johannes Kammerer, Maria Knoller, Werner Kramer, Marcus Neubronner, Ramona Riesterer</p>
+                    </div>
+                </Card>
+            </div>
+        );
+
+        const DatenschutzPage = () => (
+            <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+                <SectionHeading title="Datenschutzerklärung nach der DSGVO" />
+                <Card className="p-8 space-y-6 text-gray-700">
+                    <p className="text-sm text-gray-500">Zuletzt geändert am 1. Februar 2020</p>
+                    
+                    <p>
+                        Als Betreiber dieser Seiten nehmen wir den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln personenbezogene Daten vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften und dieser Datenschutzerklärung.
+                    </p>
+                    <p className="font-medium bg-yellow-50 p-2 border-l-4 border-yellow-400">
+                        Hinweis: Die Datenübertragung im Internet kann Sicherheitslücken aufweisen. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.
+                    </p>
+
+                    <h3 className="text-xl font-bold text-gray-900 mt-6 border-b pb-2">I. Name und Anschrift des Verantwortlichen</h3>
+                    <p>Die Verantwortliche im Sinne der Datenschutz-Grundverordnung (DSGVO) und anderer nationaler Datenschutzgesetze der Mitgliedsstaaten sowie sonstiger datenschutzrechtlicher Bestimmungen ist die:</p>
+                    <p className="font-semibold mt-2">Luftsportgemeinschaft Hotzenwald e.V.</p>
+                    <p>Flugplatz, Rüttehof 3</p>
+                    <p>79736 Rickenbach</p>
+                    <p>Tel: +49 7765 8588</p>
+                    <p>albiezkaiser(at)t-online.de</p>
+                    <p>www.lghotzenwald.de</p>
+                    <p className="mt-2">vertreten durch Paul Albiez-Kaiser</p>
+
+                    <h3 className="text-xl font-bold text-gray-900 mt-6 border-b pb-2">II. Allgemeines zur Datenverarbeitung</h3>
+                    
+                    <h4 className="font-bold text-gray-800 mt-4">1. Umfang der Verarbeitung personenbezogener Daten</h4>
+                    <p>Wir verarbeiten personenbezogene Daten der Nutzer unserer Internetseite grundsätzlich nur, soweit dies zur Bereitstellung einer funktionsfähigen Website sowie unserer Inhalte und Leistungen erforderlich ist. Die Verarbeitung personenbezogener Daten unserer Website-Nutzer erfolgt regelmäßig nur nach Einwilligung des Nutzers. Eine Ausnahme gilt in solchen Fällen, in denen eine vorherige Einholung einer Einwilligung aus tatsächlichen Gründen nicht möglich ist und die Verarbeitung der Daten durch gesetzliche Vorschriften gestattet ist.</p>
+
+                    <h4 className="font-bold text-gray-800 mt-4">2. Rechtsgrundlage für die Verarbeitung personenbezogener Daten</h4>
+                    <p>Soweit wir für Verarbeitungsvorgänge personenbezogener Daten eine Einwilligung der betroffenen Person einholen, dient Art. 6 Abs. 1 EU-Datenschutzgrundverordnung (DSGVO) als Rechtsgrundlage.</p>
+
+                    <h4 className="font-bold text-gray-800 mt-4">3. Datenlöschung und Speicherdauer</h4>
+                    <p>Die personenbezogenen Daten der betroffenen Person werden regelmäßig gelöscht oder gesperrt, sobald der Zweck der Speicherung entfallen ist. Eine Speicherung kann darüber hinaus erfolgen, wenn dies durch den europäischen oder nationalen Gesetzgeber in unionsrechtlichen Verordnungen, Gesetzen oder sonstigen Vorschriften, denen der Verantwortliche unterliegt, vorgesehen wurde. Eine Sperrung oder Löschung der Daten erfolgt auch dann, wenn eine durch die genannten Normen vorgeschriebene Speicherfrist abläuft, es sei denn, dass eine Erforderlichkeit zur weiteren Speicherung der Daten für einen Vertragsabschluss oder eine Vertragserfüllung besteht.</p>
+
+                    <h4 className="font-bold text-gray-800 mt-4">4. Minderjährige</h4>
+                    <p>Der Schutz der Daten von Kindern ist insbesondere im Online-Bereich sehr wichtig. Die Webseite ist nicht für Kinder konzipiert und richtet sich nicht an diese. Die Nutzung unserer Services durch Minderjährige ist nur mit der vorherigen Einwilligung oder Autorisierung von einem Elternteil oder Erziehungsberechtigten zulässig. Wir erfassen personenbezogene Daten von Minderjährigen nicht wissentlich. Wenn ein Elternteil oder Erziehungsberechtigter Kenntnis davon erlangt, dass sein oder ihr Kind uns personenbezogene Daten ohne deren Einwilligung bereitgestellt hat, kann er/sie sich unter albietzkaiser@t-online.de an uns wenden.</p>
+
+                    <h3 className="text-xl font-bold text-gray-900 mt-6 border-b pb-2">III. Bereitstellung der Website und Erstellung von Logfiles</h3>
+                    
+                    <h4 className="font-bold text-gray-800 mt-4">1. Beschreibung und Umfang der Datenverarbeitung</h4>
+                    <p className="font-semibold mt-2">Cookies</p>
+                    <p>Für die Bereitstellung entsprechender Services verwenden wir und unsere Partner Cookies. Dies gilt auch, wenn Sie unsere Webseite besuchen oder auf unsere Services zugreifen.</p>
+                    <p>Bei einem „Cookie“ handelt es sich um ein kleines Datenpaket, das Ihrem Gerät beim Besuch einer Webseite von dieser Webseite zugeordnet wird. Cookies sind nützlich und können für unterschiedliche Zwecke eingesetzt werden. Dazu gehören z. B. die erleichterte Navigation zwischen verschiedenen Seiten, die automatische Aktivierung bestimmter Funktionen, das Speichern Ihrer Einstellungen sowie ein optimierter Zugriff auf unsere Services. Die Verwendung von Cookies ermöglicht uns außerdem, Ihnen relevante, auf Ihre Interessen abgestimmte Werbung einzublenden und statistische Informationen zu Ihrer Nutzung unserer Services zu sammeln.</p>
+                    
+                    <p className="mt-2">Diese Webseite verwendet folgende Arten von Cookies:</p>
+                    <ul className="list-disc pl-5 space-y-2 mt-2">
+                        <li><strong>a. „Sitzungscookies“</strong>, die für eine normale Systemnutzung sorgen. Sitzungscookies werden nur für begrenzte Zeit während einer Sitzung gespeichert und von Ihrem Gerät gelöscht, sobald Sie Ihren Browser schließen.</li>
+                        <li><strong>b. „Permanente Cookies“</strong>, die nur von der Webseite gelesen und beim Schließen des Browserfensters nicht gelöscht, sondern für eine bestimmte Dauer auf Ihrem Computer gespeichert werden. Diese Art von Cookie ermöglicht uns, Sie bei Ihrem nächsten Besuch zu identifizieren und beispielsweise Ihre Einstellungen zu speichern.</li>
+                        <li><strong>c. „Drittanbieter-Cookies“</strong>, die von anderen Online-Diensten gesetzt werden, die mit eigenen Inhalten auf der von Ihnen besuchten Seite vertreten sind. Dies können z. B. externe Web-Analytics-Unternehmen sein, die den Zugriff auf unsere Webseite erfassen und analysieren.</li>
+                    </ul>
+                    
+                    <p className="mt-4">Cookies enthalten keine personenbezogenen Daten, die Sie identifizieren, doch die von uns gespeicherten personenbezogenen Daten werden möglicherweise von uns mit den in den Cookies enthaltenen Daten verknüpft. Sie können Cookies über die Geräteeinstellungen Ihres Gerät entfernen. Folgen Sie dabei den entsprechenden Anweisungen. Beachten Sie, dass die Deaktivierung von Cookies zur Einschränkung bestimmter Funktionen bei der Nutzung unserer Webseite führen kann.</p>
+                    
+                    <p>Das von uns verwendete Tool basiert auf der Technologie von Snowplow Analytics. Zu den von uns erfassten Daten zur Nutzung unserer Webseite gehören beispielsweise, wie häufig Benutzer die Webseite besuchen oder welche Bereiche aufgerufen werden. Das von uns verwendete Tool erfasst keine personenbezogenen Daten und wird von unserem Webhosting-Anbieter und Service-Provider ausschließlich zur Verbesserung des eigenen Angebots verwendet.</p>
+                    
+                    <p>Unsere Internetseiten www.lghotzenwald.de und www.lg-hotzenwald.de sind bei der 1&1 IONOS SE, Elgendorfer Str. 57, 56410 Montabaur gehostet.</p>
+
+                    <p className="font-semibold mt-4">Verwendung von Skriptbibiliotheken (Google Web Fonts)</p>
+                    <p>Damit unsere Inhalte in jedem Browser korrekt und grafisch ansprechend dargestellt werden, verwenden wir für diese Webseite Skript- und Schriftbibliotheken wie Google Web Fonts (https://www.google.com/webfonts). Google Web Fonts werden in den Cache Ihres Browsers übertragen, sodass sie nur einmal geladen werden müssen. Wenn Ihr Browser Google Web Fonts nicht unterstützt oder den Zugriff verweigert, werden die Inhalte in einer Standardschriftart dargestellt.</p>
+                    <p>Beim Aufrufen von Skript- oder Schriftbibliotheken wir automatisch eine Verbindung zum Betreiber der Bibliothek hergestellt. Es besteht hierbei theoretisch die Möglichkeit für diesen Betreiber, Daten zu erfassen. Derzeit ist nicht bekannt, ob und zu welchem Zweck die Betreiber der entsprechenden Bibliotheken tatsächlich Daten erfassen.</p>
+                    <p>Hier finden Sie die Datenschutzbestimmungen des Betreibers der Google-Bibliothek: <a href="https://www.google.com/policies/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://www.google.com/policies/privacy</a></p>
+
+                    <h4 className="font-bold text-gray-800 mt-4">2. Rechtsgrundlage für die Datenverarbeitung</h4>
+                    <p>Rechtsgrundlage für die vorübergehende Speicherung der Daten ist Art. 6 Abs. 1 lit. f DSGVO.</p>
+
+                    <h4 className="font-bold text-gray-800 mt-4">3. Zweck der Datenverarbeitung</h4>
+                    <p>Die vorübergehende Speicherung der IP-Adresse durch das System ist notwendig, um eine Auslieferung der Website an den Rechner des Nutzers zu ermöglichen und zur Optimierung des Webangebotes.</p>
+                    <p>In diesen Zwecken liegt auch unser berechtigtes Interesse an der Datenverarbeitung nach Art. 6 Abs. 1 lit. f DSGVO.</p>
+
+                    <h4 className="font-bold text-gray-800 mt-4">4. Dauer der Speicherung</h4>
+                    <p>Die Daten werden gelöscht, sobald sie für die Erreichung des Zweckes ihrer Erhebung nicht mehr erforderlich sind.</p>
+
+                    <h4 className="font-bold text-gray-800 mt-4">5. Widerspruchs- und Beseitigungsmöglichkeit</h4>
+                    <p>Die Erfassung der Daten zur Bereitstellung der Website und die Speicherung der Daten in Logfiles ist für den Betrieb der Internetseite zwingend erforderlich. Es besteht folglich seitens des Nutzers keine Widerspruchsmöglichkeit.</p>
+
+                    <h3 className="text-xl font-bold text-gray-900 mt-6 border-b pb-2">IV. E-Mail-Kontakt und Kontaktformular</h3>
+                    
+                    <h4 className="font-bold text-gray-800 mt-4">1. Beschreibung und Umfang der Datenverarbeitung</h4>
+                    <p>Auf unseren Internetseiten ist eine Kontaktaufnahme über bereitgestellte E-Mail-Adressen möglich. In diesem Fall werden die mit der E-Mail übermittelten personenbezogenen Daten des Nutzers gespeichert.</p>
+                    <p>Nimmt ein Nutzer diese Möglichkeit der Kontaktaufnahme wahr, so werden die in der Eingabemaske eingegeben Daten per E-Mail an uns übermittelt und innerhalb dieser E-Mail gespeichert.</p>
+                    <p>Vorgesehene Felder für Daten sind: Name, E-Mail-Adresse, Telefonnummer sowie die Nachricht.</p>
+                    <p>Eine weitere Speicherung beim Hoster (z. B. in einer Datenbank) findet nicht statt.</p>
+                    <p>Es erfolgt in diesem Zusammenhang keine Weitergabe der Daten an Dritte. Die Daten werden ausschließlich für die Verarbeitung der Konversation verwendet. Wir gehen davon aus, dass wir zur Beantwortung per E-Mail oder bei Angabe der Telefonnummer via Telefon/Mobilfunk berechtigt sind. Sollten Sie eine hiervon abweichende Art der Kommunikation wünschen, müssen Sie uns dies ausdrücklich mitteilen.</p>
+
+                    <h4 className="font-bold text-gray-800 mt-4">2. Rechtsgrundlage für die Datenverarbeitung</h4>
+                    <p>Rechtsgrundlage für die Verarbeitung der Daten ist bei Vorliegen einer Einwilligung des Nutzers Art. 6 Abs. 1 lit. a DSGVO.</p>
+                    <p>Rechtsgrundlage für die Verarbeitung der Daten, die im Zuge einer Übersendung einer E-Mail (auch wenn sie durch Ausfüllen der Kontaktformulare generiert sind) übermittelt werden, ist Art. 6 Abs. 1 lit. f DSGVO. Zielt der E-Mail-Kontakt auf die Mitgliedschaft im Verein ab, so ist zusätzliche Rechtsgrundlage für die Verarbeitung Art. 6 Abs. 1 lit. b DSGVO.</p>
+
+                    <h4 className="font-bold text-gray-800 mt-4">3. Zweck der Datenverarbeitung</h4>
+                    <p>Die Verarbeitung der personenbezogenen Daten dient uns allein zur Bearbeitung der Kontaktaufnahme. Im Falle einer Kontaktaufnahme per E-Mail liegt hierin auch das erforderliche berechtigte Interesse an der Verarbeitung der Daten.</p>
+
+                    <h4 className="font-bold text-gray-800 mt-4">4. Dauer der Speicherung</h4>
+                    <p>Die Daten werden regelmäßig gelöscht, sobald sie für die Erreichung des Zwecks ihrer Erhebung nicht mehr erforderlich sind. Die personenbezogenen Daten, die per E-Mail übersandt wurden, werden dann innerhalb unseres Löschkonzeptes berücksichtigt, wenn die jeweilige Konversation mit dem Nutzer beendet ist. Beendet ist die Konversation dann, wenn sich aus den Umständen entnehmen lässt, dass der betroffene Sachverhalt abschließend geklärt ist.</p>
+
+                    <h4 className="font-bold text-gray-800 mt-4">5. Widerspruchs- und Beseitigungsmöglichkeit</h4>
+                    <p>Der Nutzer hat jederzeit die Möglichkeit, seine Einwilligung zur Verarbeitung der personenbezogenen Daten zu widerrufen. Nimmt der Nutzer per E-Mail Kontakt mit uns auf, so kann er der Speicherung seiner personenbezogenen Daten jederzeit widersprechen. Senden Sie uns hierfür bitte eine E-Mail an albiezkaiser@t-online.de. In einem solchen Fall kann die Konversation nicht fortgeführt werden. Alle personenbezogenen Daten, die im Zuge der Kontaktaufnahme gespeichert wurden, werden in diesem Fall gelöscht.</p>
+
+                    <h3 className="text-xl font-bold text-gray-900 mt-6 border-b pb-2">V. Verlinkung auf Social-Media-Plattformen</h3>
+                    <p>Wir weisen grundsätzlich darauf hin, dass Sie mit dem Anklicken auf verlinkte Social-Media-Plattformen unseren Webauftritt und auch den Geltungsbereich dieser Datenschutzerklärung verlassen. Auf den Social-Media-Plattformen gelten ausschließlich die jeweiligen Datenschutzerklärungen und Nutzungsbedingungen des Betreibers der Social-Media-Plattform.</p>
+                    <p>Von unserer Website wird auf das soziale Netzwerk Facebook verlinkt. Wenn Sie sich außerhalb der Vereinigten Staaten befinden, ist für Ihre personenbezogenen Daten die Facebook Ireland Ltd. verantwortlich, ein irisches Unternehmen mit eingetragenem Geschäftssitz in 4 Grand Canal Square, Grand Canal Harbour, Dublin 2, Irland (Stand Januar 2020).</p>
+                    <p>Wenn Sie diese Verlinkung von unserer Internetseite aufrufen, wird eine Verbindung zu den Facebook-Servern hergestellt. Nähere Informationen zur Erhebung und Nutzung der Daten durch Facebook, über Ihre Rechte und Möglichkeiten zum Schutz Ihrer Privatsphäre finden Sie in den Facebook-Datenschutzhinweisen: <a href="https://de-de.facebook.com/privacy/explanation" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://de-de.facebook.com/privacy/explanation</a> (Zugriff am 30.01.2020).</p>
+                    <p>Sind Sie gerade bei Facebook als Mitglied eingeloggt, ordnet Facebook diese Information Ihrem persönlichen Benutzerkonto zu. Dies können Sie nur durch Ausloggen vor der Nutzung des Links verhindern.</p>
+
+                    <h3 className="text-xl font-bold text-gray-900 mt-6 border-b pb-2">VI. Rechte der betroffenen Person</h3>
+                    <p>Sie haben folgende Rechte:</p>
+                    <ul className="list-disc pl-5 space-y-2">
+                        <li>Eine Bestätigung, ob und inwieweit Ihre personenbezogenen Daten verwendet und verarbeitet werden, sowie den Zugriff auf die über Sie gespeicherten personenbezogenen Daten und zusätzliche Informationen anfordern.</li>
+                        <li>Eine Kopie der personenbezogenen Daten, die Sie uns freiwillig bereitgestellt haben, in einem strukturierten, gängigen und maschinenlesbaren Format anfordern.</li>
+                        <li>Eine Berichtigung der personenbezogenen Daten, die wir von Ihnen gespeichert haben, anfordern.</li>
+                        <li>Das Löschen Ihrer personenbezogenen Daten beantragen.</li>
+                        <li>Der Verarbeitung Ihrer personenbezogenen Daten durch uns widersprechen.</li>
+                        <li>Die Einschränkung der Verarbeitung Ihrer personenbezogenen Daten durch uns beantragen.</li>
+                        <li>Eine Beschwerde bei einer Aufsichtsbehörde einreichen.</li>
+                    </ul>
+                    <p className="mt-4">Beachten Sie jedoch, dass diese Rechte nicht uneingeschränkt gelten, sondern unseren eigenen rechtmäßigen Interessen sowie behördlichen Vorschriften unterliegen.</p>
+                    <p>Wenn Sie eines der hier aufgeführten Rechte in Anspruch nehmen möchten oder weitere Informationen wünschen, wenden Sie sich an unseren Datenschutzbeauftragten.</p>
+
+                    <h3 className="text-xl font-bold text-gray-900 mt-6 border-b pb-2">VII. Aktualisierungen oder Änderungen dieser Datenschutzerklärung</h3>
+                    <p>Wir behalten uns das Recht vor, diese Datenschutzbestimmungen von Zeit zu Zeit zu ändern oder zu prüfen. Sie finden das Datum der aktuellen Version unter „Zuletzt geändert am“. Ihre fortgesetzte Nutzung der Plattform nach der Bekanntmachung solcher Änderungen auf unserer Webseite stellt Ihre Zustimmung zu solchen Änderungen an den Datenschutzbestimmungen dar und gilt als Ihr Einverständnis der Bindung an die geänderten Bestimmungen.</p>
                 </Card>
             </div>
         );
@@ -1405,6 +1548,7 @@
                     case 'guestflight': return <GuestFlightPage />; 
                     case 'contact': return <ContactPage />;
                     case 'impressum': return <ImpressumPage />;
+                    case 'datenschutz': return <DatenschutzPage />;
                     case 'schnupperflugtag': return <SchnupperflugPage onBack={() => setCurrentPage('home')} />;
                     case 'preparation': return <PreparationPage />;
                     case 'links': return <LinksPage />;
@@ -1588,6 +1732,7 @@
                                 <h4 className="text-white font-bold mb-4">Rechtliches</h4>
                                 <ul className="space-y-2 text-sm">
                                     <li onClick={() => setCurrentPage('impressum')} className="hover:text-white cursor-pointer transition">Impressum</li>
+                                    <li onClick={() => setCurrentPage('datenschutz')} className="hover:text-white cursor-pointer transition">Datenschutzerklärung</li>
                                 </ul>
                             </div>
                         </div>
