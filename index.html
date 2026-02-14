@@ -88,10 +88,10 @@
             nav: [
                 { id: 'home', label: 'Home' },
                 { id: 'airport', label: 'Flugplatz & Infrastruktur' },
-                { id: 'history', label: 'Chronik' },
                 { id: 'fleet', label: 'Flugzeugpark' },
                 { id: 'training', label: 'Ausbildung' },
                 { id: 'competition', label: 'Hotzenwaldwettbewerb' },
+                { id: 'history', label: 'Chronik' }, // Chronik nach Wettbewerb verschoben
                 { id: 'contact', label: 'Kontakt' }
             ],
             pages: {
@@ -363,7 +363,13 @@
                     steps: [
                         { title: "Schnupperkurs", text: (
                             <span>
-                                Wir bieten regelmäßig Schnupperkurse an. Der nächste Termin ist der <strong className="text-blue-600">Schnupperflugtag am 02.05.2026</strong>.
+                                Wir bieten regelmäßig Schnupperkurse an. Der nächste Termin ist der 
+                                <span 
+                                    className="text-blue-600 font-bold cursor-pointer hover:underline ml-1"
+                                    onClick={() => setCurrentPage('schnupperflugtag')}
+                                >
+                                    Schnupperflugtag am 02.05.2026
+                                </span>.
                             </span>
                         )},
                         { title: "Die Ausbildung", text: "Praktische Schulung im Doppelsitzer bis zum ersten Alleinflug." },
@@ -433,11 +439,12 @@
 
         const HomePage = ({ setCurrentPage }) => {
             // Live Webcam Refresh Logic
-            const [webcamUrl, setWebcamUrl] = useState("https://www.lgh-platz.de/cam/cam31.jpg");
+            const [webcamUrl, setWebcamUrl] = useState("http://www.lgh-platz.de/cam/cam31.jpg");
+            const [webcamError, setWebcamError] = useState(false);
             
             useEffect(() => {
                 const interval = setInterval(() => {
-                    setWebcamUrl(`https://www.lgh-platz.de/cam/cam31.jpg?t=${new Date().getTime()}`);
+                    setWebcamUrl(`http://www.lgh-platz.de/cam/cam31.jpg?t=${new Date().getTime()}`);
                 }, 60000); // Refresh every 60 seconds
                 return () => clearInterval(interval);
             }, []);
@@ -515,11 +522,20 @@
                             <Card className="bg-gray-100 border-gray-200 h-full hover:shadow-md transition-shadow cursor-pointer group overflow-hidden relative min-h-[250px] flex flex-col">
                                 <div className="relative h-full w-full flex-grow bg-black flex items-center justify-center">
                                     {/* Bild der Webcam - Vollständig angezeigt mit object-contain */}
-                                    <img 
-                                        src={webcamUrl}
-                                        alt="Live Webcam" 
-                                        className="max-h-full max-w-full object-contain"
-                                    />
+                                    {!webcamError ? (
+                                        <img 
+                                            src={webcamUrl}
+                                            alt="Live Webcam" 
+                                            className="max-h-full max-w-full object-contain"
+                                            onError={() => setWebcamError(true)}
+                                        />
+                                    ) : (
+                                        <div className="text-white text-center p-4">
+                                            <Camera size={48} className="mx-auto mb-2 opacity-50"/>
+                                            <p>Vorschau nicht verfügbar.</p>
+                                            <p className="text-sm text-gray-400 mt-1">Hier klicken zum Öffnen</p>
+                                        </div>
+                                    )}
                                     
                                     <div className="absolute bottom-0 left-0 p-6 w-full bg-gradient-to-t from-black/80 to-transparent">
                                          <div className="flex items-center gap-2 text-white font-bold mb-1">
@@ -682,7 +698,7 @@
             );
         };
 
-        const TrainingPage = () => (
+        const TrainingPage = ({ setCurrentPage }) => (
             <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
                 <SectionHeading title={siteContent.pages.training.title} subtitle={siteContent.pages.training.intro} />
                 <div className="space-y-8 mt-12">
@@ -704,7 +720,7 @@
                         Komm einfach an einem Wochenende bei schönem Wetter vorbei oder schreibe uns eine E-Mail.
                         Wir bieten regelmäßig Schnupperkurse an.
                     </p>
-                    <Button>Kontakt aufnehmen</Button>
+                    <Button onClick={() => setCurrentPage('contact')}>Kontakt aufnehmen</Button>
                 </div>
             </div>
         );
@@ -763,53 +779,92 @@
 
         /* FeesPage entfernt */
 
-        const ContactPage = () => (
-            <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
-                <SectionHeading title="Kontakt & Anfahrt" />
-                <div className="grid md:grid-cols-2 gap-12">
-                    <Card className="p-8">
-                        <h3 className="text-xl font-bold mb-6">Anschrift</h3>
-                        <div className="space-y-4">
-                            <div className="flex items-start gap-4">
-                                <MapPin className="text-blue-600 mt-1 flex-shrink-0" />
-                                <div>
-                                    <p className="font-semibold">{siteContent.general.name}</p>
-                                    <p className="text-gray-600">{siteContent.general.location}</p>
-                                    <p className="text-gray-600">{siteContent.general.address}</p>
+        const ContactPage = () => {
+            const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                const subject = encodeURIComponent(`Anfrage von ${formData.name} via LGH Webseite`);
+                const body = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nNachricht:\n${formData.message}`);
+                window.location.href = `mailto:hubert.strohmeier@gmail.com?subject=${subject}&body=${body}`;
+            };
+
+            const handleChange = (e) => {
+                setFormData({ ...formData, [e.target.name]: e.target.value });
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+                    <SectionHeading title="Kontakt & Anfahrt" />
+                    <div className="grid md:grid-cols-2 gap-12">
+                        <Card className="p-8">
+                            <h3 className="text-xl font-bold mb-6">Anschrift</h3>
+                            <div className="space-y-4">
+                                <div className="flex items-start gap-4">
+                                    <MapPin className="text-blue-600 mt-1 flex-shrink-0" />
+                                    <div>
+                                        <p className="font-semibold">{siteContent.general.name}</p>
+                                        <p className="text-gray-600">{siteContent.general.location}</p>
+                                        <p className="text-gray-600">{siteContent.general.address}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-4">
+                                    <Mail className="text-blue-600 flex-shrink-0" />
+                                    <a href={`mailto:${siteContent.general.contactEmail}`} className="text-gray-600 hover:text-blue-600">
+                                        {siteContent.general.contactEmail}
+                                    </a>
+                                </div>
+                                <div className="flex items-center gap-4">
+                                    <Phone className="text-blue-600 flex-shrink-0" />
+                                    <span className="text-gray-600">{siteContent.general.phone}</span>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-4">
-                                <Mail className="text-blue-600 flex-shrink-0" />
-                                <a href={`mailto:${siteContent.general.contactEmail}`} className="text-gray-600 hover:text-blue-600">
-                                    {siteContent.general.contactEmail}
-                                </a>
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <Phone className="text-blue-600 flex-shrink-0" />
-                                <span className="text-gray-600">{siteContent.general.phone}</span>
-                            </div>
-                        </div>
-                    </Card>
+                        </Card>
 
-                    <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                        <h3 className="text-xl font-bold mb-4">Schreib uns</h3>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                            <input type="text" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" placeholder="Dein Name" />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">E-Mail</label>
-                            <input type="email" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" placeholder="deine@email.de" />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Nachricht</label>
-                            <textarea rows="4" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" placeholder="Deine Nachricht an uns..."></textarea>
-                        </div>
-                        <Button className="w-full">Nachricht senden</Button>
-                    </form>
+                        <form className="space-y-4" onSubmit={handleSubmit}>
+                            <h3 className="text-xl font-bold mb-4">Schreib uns</h3>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                <input 
+                                    type="text" 
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" 
+                                    placeholder="Dein Name" 
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">E-Mail</label>
+                                <input 
+                                    type="email" 
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" 
+                                    placeholder="deine@email.de" 
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Nachricht</label>
+                                <textarea 
+                                    rows="4" 
+                                    name="message"
+                                    value={formData.message}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" 
+                                    placeholder="Deine Nachricht an uns..."
+                                    required
+                                ></textarea>
+                            </div>
+                            <Button className="w-full">Nachricht senden (Mailprogramm öffnen)</Button>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        };
 
         const ImpressumPage = () => (
              <div className="max-w-3xl mx-auto px-4 py-8 animate-fadeIn text-gray-700">
@@ -894,9 +949,10 @@
                             <ul className="space-y-3">
                                 <li>• Sicherheitseinweisung & Briefing</li>
                                 <li>• Vorstellung der Flugzeuge & Technik</li>
-                                <li>• <strong>3 Starts im Doppelsitzer</strong> mit erfahrenem Fluglehrer</li>
+                                <li>• <strong>Ein Start an der Winde</strong> mit erfahrenem Fluglehrer</li>
                                 <li>• Möglichkeit, selbst das Steuer zu übernehmen</li>
-                                <li>• Gemeinsames Mittagessen & Getränke inklusive</li>
+                                <li>• Diverse Vorträge rund ums Fliegen</li>
+                                <li>• Gemeinsames Mittagessen (Grillwurst) & Getränke inklusive</li>
                             </ul>
                         </div>
                         
@@ -919,7 +975,7 @@
                                 </li>
                                 <li className="flex justify-between border-b pb-2">
                                     <span>Kostenbeitrag:</span>
-                                    <span className="font-bold">50,00 € (alles inklusive)</span>
+                                    <span className="font-bold">30,00 € (alles inklusive)</span>
                                 </li>
                                 <li className="flex justify-between pt-2">
                                     <span>Voraussetzung:</span>
@@ -930,12 +986,11 @@
                     </div>
 
                     <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 text-center">
-                        <h3 className="text-xl font-bold mb-2">Anmeldung erforderlich</h3>
-                        <p className="mb-4">Die Teilnehmerzahl ist begrenzt, um jedem genügend Flugzeit zu ermöglichen.</p>
-                        <p className="font-bold text-blue-600 mb-4">Anmeldeschluss: 25. April 2026</p>
+                        <h3 className="text-xl font-bold mb-2">Lust bekommen?</h3>
+                        <p className="mb-4">Dann melde dich gleich an und sichere dir deinen Platz im Cockpit.</p>
                         <div className="flex justify-center gap-4">
-                            <Button onClick={() => window.location.href=`mailto:info@lg-hotzenwald.de?subject=Anmeldung Schnupperflugtag 2026`}>
-                                Jetzt per E-Mail anmelden
+                            <Button onClick={() => window.open('https://form.jotform.com/lghotzenwald/schnupperflugtag-der-lgh-am-2-mai-2', '_blank')}>
+                                Anmelden
                             </Button>
                         </div>
                     </div>
@@ -962,7 +1017,7 @@
                     case 'airport': return <AirportPage />;
                     case 'history': return <HistoryPage />;
                     case 'fleet': return <FleetPage />;
-                    case 'training': return <TrainingPage />;
+                    case 'training': return <TrainingPage setCurrentPage={setCurrentPage} />;
                     case 'fees': return <FeesPage />;
                     case 'competition': return <CompetitionPage />; // Neuer Case
                     case 'contact': return <ContactPage />;
