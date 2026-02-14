@@ -1,695 +1,517 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LGH Segelflugausbildung</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React & ReactDOM -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-    <!-- Babel -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        body { 
-            font-family: 'Inter', sans-serif; 
-            -webkit-tap-highlight-color: transparent; /* Entfernt grauen Schleier beim Tippen auf iOS */
-        }
-        /* Flüssigere Animationen */
-        .animate-blob { animation: blob 7s infinite; }
-        .animation-delay-2000 { animation-delay: 2s; }
-        @keyframes blob {
-            0% { transform: translate(0px, 0px) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-            100% { transform: translate(0px, 0px) scale(1); }
-        }
-        /* Verhindert horizontales Scrollen auf Mobile */
-        html, body {
-            overflow-x: hidden;
-            width: 100%;
-        }
-    </style>
-</head>
-<body class="bg-slate-50 text-slate-900 antialiased selection:bg-blue-200 selection:text-blue-900">
-    <div id="root"></div>
+import React, { useState, useEffect } from 'react';
+import { Menu, X, Wind, MapPin, Calendar, Mail, Phone, ArrowRight, ChevronRight, Cloud, Info, Plane, AlertCircle } from 'lucide-react';
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+/**
+ * KONFIGURATION & INHALT
+ * Hier können Sie die Inhalte der Webseite einfach anpassen.
+ */
+const siteContent = {
+  general: {
+    name: "LG Hotzenwald e.V.",
+    fullName: "Luftsportgemeinschaft Hotzenwald e.V.",
+    location: "Flugplatz Hütten",
+    frequency: "123.450 MHz", // Beispiel
+    contactEmail: "info@lg-hotzenwald.de",
+    elevation: "880m MSL"
+  },
+  status: {
+    isOpen: true,
+    message: "Flugbetrieb aktiv (Windenstart)",
+    lastUpdate: "Heute, 09:30 Uhr"
+  },
+  nav: [
+    { id: 'home', label: 'Home' },
+    { id: 'airport', label: 'Flugplatz & Infrastruktur' },
+    { id: 'fleet', label: 'Flugzeugpark' },
+    { id: 'training', label: 'Ausbildung' },
+    { id: 'fees', label: 'Gebühren' },
+    { id: 'contact', label: 'Kontakt' }
+  ],
+  pages: {
+    home: {
+      heroTitle: "Fliegen über dem Südschwarzwald",
+      heroSubtitle: "Willkommen bei der Luftsportgemeinschaft Hotzenwald e.V. auf dem Flugplatz Hütten.",
+      news: [
+        { date: "12.04.2024", title: "Saisonstart 2024", text: "Wir starten in die neue Saison. Die Flugzeuge sind gewartet und startklar." },
+        { date: "28.03.2024", title: "Jahreshauptversammlung", text: "Einladung zur JHV im Clubheim am 15. Mai um 19:00 Uhr." }
+      ]
+    },
+    airport: {
+      title: "Flugplatz Hütten",
+      description: "Unser Flugplatz liegt malerisch eingebettet in der Landschaft des Hotzenwalds. Er ist der ideale Ausgangspunkt für Flüge über den Schwarzwald, in die Schweiz und zu den Alpen.",
+      runway: "Grasbahn 26/08, 800m",
+      facts: [
+        { label: "Höhe", value: "880m MSL" },
+        { label: "Frequenz", value: "Hotzenwald Radio 123.050" }, // Platzhalter
+        { label: "Betriebszeiten", value: "PPR / Sa, So & Feiertags" },
+        { label: "Startarten", value: "Winde, F-Schlepp (auf Anfrage)" }
+      ]
+    },
+    fleet: [
+      { name: "ASK 21", id: "D-1234", type: "Doppelsitzer", desc: "Unser robustes Schulungsflugzeug für die Anfängerausbildung und Gastflüge.", image: "/api/placeholder/400/250" },
+      { name: "Duo Discus", id: "D-5678", type: "Hochleistungs-Doppelsitzer", desc: "Für Streckenflugtraining und Leistungsflüge zu zweit.", image: "/api/placeholder/400/250" },
+      { name: "LS 4", id: "D-9012", type: "Einsitzer", desc: "Der klassische Einsitzer für die ersten Alleinüberlandflüge.", image: "/api/placeholder/400/250" },
+      { name: "Discus 2b", id: "D-3456", type: "Hochleistungs-Einsitzer", desc: "Wettbewerbsflugzeug der Standardklasse.", image: "/api/placeholder/400/250" },
+      { name: "Motorsegler", id: "D-K...", type: "TMG", desc: "Für Reiseflüge und Schulung auch ohne Thermik.", image: "/api/placeholder/400/250" }
+    ],
+    training: {
+      title: "Fliegen lernen",
+      intro: "Der Traum vom Fliegen kann wahr werden. Wir bilden Segelflugpiloten (SPL) ehrenamtlich aus.",
+      steps: [
+        { title: "Schnupperkurs", text: "Lerne uns und den Sport kennen. 4 Wochen Mitfliegen und erste Starts am Steuer." },
+        { title: "Die Ausbildung", text: "Praktische Schulung im Doppelsitzer bis zum ersten Alleinflug." },
+        { title: "Theorie", text: "Im Winter findet der theoretische Unterricht in Fächern wie Meteorologie, Technik und Luftrecht statt." },
+        { title: "Lizenz", text: "Nach der Prüfung hältst du deine weltweite Lizenz in den Händen." }
+      ]
+    },
+    fees: {
+      title: "Gebühren & Kosten",
+      intro: "Segelfliegen ist günstiger als man denkt. Hier eine Übersicht unserer aktuellen Gebühren.",
+      list: [
+        { item: "Mitgliedsbeitrag Aktiv (Erwachsene)", price: "XX,00 € / Monat" },
+        { item: "Mitgliedsbeitrag Jugend", price: "XX,00 € / Monat" },
+        { item: "Windenstart", price: "X,00 €" },
+        { item: "Flugminute Segelflug", price: "0,XX €" }
+      ]
+    }
+  }
+};
 
-        // --- ICONS (Optimiert für mobile Darstellung) ---
-        const Icon = ({ path, className = "w-6 h-6" }) => (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                {path}
-            </svg>
-        );
+/**
+ * KOMPONENTEN
+ */
 
-        const Icons = {
-            Plane: (props) => <Icon {...props} path={<><path d="M2 12h20"/><path d="M13 2l9 20"/><path d="M13 22l9-20"/></>} />, 
-            PlaneRotate: (props) => <Icon {...props} path={<path d="M20.5 10.5l-9.5 5-6-3.5L20.5 3l-3.5 17-6-3.5L11 16.5"/>} />, 
-            BookOpen: (props) => <Icon {...props} path={<><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></>} />,
-            CheckSquare: (props) => <Icon {...props} path={<><polyline points="9 11 12 14 22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></>} />,
-            Wind: (props) => <Icon {...props} path={<path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/>} />,
-            Map: (props) => <Icon {...props} path={<><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></>} />,
-            Users: (props) => <Icon {...props} path={<><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>} />,
-            Award: (props) => <Icon {...props} path={<><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></>} />,
-            ChevronRight: (props) => <Icon {...props} path={<polyline points="9 18 15 12 9 6"/>} />,
-            Menu: (props) => <Icon {...props} path={<><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></>} />,
-            X: (props) => <Icon {...props} path={<><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>} />,
-            CloudSun: (props) => <Icon {...props} path={<><path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/><path d="M15.947 12.65a4 4 0 0 0-5.925-4.128"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/></>} />,
-            AlertTriangle: (props) => <Icon {...props} path={<><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></>} />,
-            Play: (props) => <Icon {...props} path={<polygon points="5 3 19 12 5 21 5 3"/>} />
-        };
+const Button = ({ children, variant = "primary", onClick, className = "" }) => {
+  const baseStyle = "px-6 py-2 rounded-md font-medium transition-all duration-200";
+  const variants = {
+    primary: "bg-blue-600 text-white hover:bg-blue-700 shadow-md",
+    outline: "border-2 border-blue-600 text-blue-600 hover:bg-blue-50",
+    ghost: "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+  };
+  return (
+    <button onClick={onClick} className={`${baseStyle} ${variants[variant]} ${className}`}>
+      {children}
+    </button>
+  );
+};
 
-        // --- DATEN ---
-        const trainingSteps = [
-            {
-                title: "1. Der Start",
-                subtitle: "Vom Fußgänger zum Piloten",
-                icon: <Icons.PlaneRotate />,
-                desc: "Du lernst Starten, Landen und das Flugzeug sicher zu beherrschen.",
-                details: [
-                    "Mindestalter: 14 Jahre für Alleinflug",
-                    "Verhalten auf dem Flugplatz (Segelflug-Betriebsordnung (SBO))",
-                    "Wirkung der Ruder & Steuern",
-                    "Windenstart & F-Schlepp",
-                    "Verhalten bei Seilriss",
-                    "ZIEL: Dein erster Alleinflug!"
-                ]
-            },
-            {
-                title: "2. Fertigkeiten",
-                subtitle: "Thermik & Technik",
-                icon: <Icons.Wind />,
-                desc: "Alleine in der Platzrunde. Thermikfliegen kommt dazu.",
-                details: [
-                    "Festigung der Alleinflüge",
-                    "Thermikfliegen & Kreisen",
-                    "Steilkreise & Schnellflug",
-                    "Starts/Landungen bei Seitenwind",
-                    "Umschulung auf Einsitzer"
-                ]
-            },
-            {
-                title: "3. Strecke & Prüfung",
-                subtitle: "Der Weg zur Lizenz",
-                icon: <Icons.Map />,
-                desc: "Raus aus der Platzrunde! Navigieren und Lizenzvorbereitung.",
-                details: [
-                    "50km Solo oder 100km mit Lehrer",
-                    "Außenlandeübungen",
-                    "Theoretische Prüfung (BZF & SPL)",
-                    "Praktische Prüfung",
-                    "Mindestalter Lizenz: 16 Jahre"
-                ]
-            }
-        ];
+const SectionHeading = ({ title, subtitle }) => (
+  <div className="mb-12 text-center max-w-3xl mx-auto">
+    <h2 className="text-3xl font-bold text-gray-900 mb-4 font-heading">{title}</h2>
+    {subtitle && <p className="text-xl text-gray-600 leading-relaxed">{subtitle}</p>}
+    <div className="w-24 h-1 bg-blue-600 mx-auto mt-6 rounded-full"></div>
+  </div>
+);
 
-        const quizQuestions = [
-            {
-                question: "Welches Dokument muss auf internationalen Flügen im Original mit?",
-                options: ["Kopie des Ausweises", "Lizenz (SPL)", "Wartungshandbuch", "Mitgliedsausweis"],
-                correct: 1,
-                explanation: "Deine Lizenz (SPL) ist dein wichtigstes Dokument und muss im Original dabei sein."
-            },
-            {
-                question: "Ab wann darfst du frühestens alleine fliegen (Solo)?",
-                options: ["14 Jahre", "16 Jahre", "18 Jahre", "15 Jahre"],
-                correct: 0,
-                explanation: "Mit 14 Jahren und der Reifebestätigung durch deine Fluglehrer darfst du abheben!"
-            },
-            {
-                question: "Was bedeutet 'SERA'?",
-                options: ["Special Radar Approach", "Standardized European Rules of the Air", "Segelflug Recht Allgemein", "Safe Area"],
-                correct: 1,
-                explanation: "SERA steht für die einheitlichen europäischen Flugregeln."
-            },
-            {
-                question: "Welche Wolken zeigen oft Thermik an?",
-                options: ["Stratus (Schicht)", "Cumulus (Haufen)", "Cirrus (Feder)", "Nimbostratus (Regen)"],
-                correct: 1,
-                explanation: "Cumuluswolken sind die klassischen 'Schönwetterwolken' für Aufwinde."
-            }
-        ];
+const Card = ({ title, children, className = "" }) => (
+  <div className={`bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow ${className}`}>
+    {children}
+  </div>
+);
 
-        const checkListStart = [
-            { id: 1, text: "Gurte fest?", checked: false },
-            { id: 2, text: "Haube verriegelt?", checked: false },
-            { id: 3, text: "Luftbremsen verriegelt?", checked: false },
-            { id: 4, text: "Trimmung neutral?", checked: false },
-            { id: 5, text: "Startbahn/Sektor frei?", checked: false },
-            { id: 6, text: "Wind gecheckt?", checked: false },
-            { id: 7, text: "Fallschirm angelegt?", checked: false },
-        ];
+// --- SEITEN INHALTE ---
 
-        // --- KOMPONENTEN ---
+const HomePage = () => (
+  <div className="space-y-16 animate-fadeIn">
+    {/* Hero Section */}
+    <div className="relative h-[600px] rounded-2xl overflow-hidden shadow-xl mx-4 lg:mx-0">
+      <div className="absolute inset-0 bg-gray-900/40 z-10"></div>
+      {/* Platzhalter Bild - In Produktion durch echtes Bild ersetzen */}
+      <img 
+        src="/api/placeholder/1200/600" 
+        alt="Segelflugzeug über dem Schwarzwald" 
+        className="w-full h-full object-cover"
+      />
+      <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center text-white p-6">
+        <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">{siteContent.pages.home.heroTitle}</h1>
+        <p className="text-xl md:text-2xl mb-8 max-w-2xl drop-shadow-md">{siteContent.pages.home.heroSubtitle}</p>
+        <div className="flex gap-4 flex-col sm:flex-row">
+          <button className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition shadow-lg">
+            Mitfliegen
+          </button>
+          <button className="px-8 py-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white text-white rounded-lg font-semibold transition shadow-lg">
+            Mitglied werden
+          </button>
+        </div>
+      </div>
+    </div>
 
-        const Navigation = ({ activeTab, setActiveTab, mobileMenuOpen, setMobileMenuOpen }) => {
-            const navItems = [
-                { id: 'home', label: 'Start', icon: <Icons.CloudSun /> },
-                { id: 'training', label: 'Ausbildung', icon: <Icons.BookOpen /> },
-                { id: 'practice', label: 'Praxis', icon: <Icons.CheckSquare /> },
-                { id: 'quiz', label: 'Quiz', icon: <Icons.Award /> },
-                { id: 'club', label: 'Infos', icon: <Icons.Users /> },
-            ];
-
-            return (
-                <nav className="bg-slate-900 text-white sticky top-0 z-50 shadow-xl border-b border-slate-700 w-full">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex items-center justify-between h-16">
-                            {/* Logo Bereich */}
-                            <div 
-                                className="flex items-center gap-3 cursor-pointer active:opacity-80 transition-opacity" 
-                                onClick={() => setActiveTab('home')}
-                            >
-                                <div className="bg-white p-1 rounded-lg h-10 w-10 flex-shrink-0 flex items-center justify-center shadow-lg shadow-blue-900/20 overflow-hidden">
-                                    <img 
-                                        src="https://www.lghotzenwald.de/images/logo.png" 
-                                        alt="LGH"
-                                        className="w-full h-full object-contain"
-                                        onError={(e) => {
-                                            e.target.style.display = 'none';
-                                            e.target.parentNode.innerHTML = '<span class="text-blue-800 font-bold text-xs">LGH</span>';
-                                        }}
-                                    />
-                                </div>
-                                <div className="flex flex-col leading-none select-none">
-                                    <span className="font-bold text-xs sm:text-sm tracking-tight">Luftsportgemeinschaft</span>
-                                    <span className="font-bold text-xs sm:text-sm text-blue-400 tracking-tight">Hotzenwald</span>
-                                </div>
-                            </div>
-                            
-                            {/* Desktop Nav */}
-                            <div className="hidden md:block">
-                                <div className="ml-10 flex items-baseline space-x-2">
-                                    {navItems.map((item) => (
-                                        <button
-                                            key={item.id}
-                                            onClick={() => setActiveTab(item.id)}
-                                            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                                                activeTab === item.id 
-                                                ? 'bg-blue-600 text-white shadow-lg scale-105' 
-                                                : 'text-gray-300 hover:bg-slate-800 hover:text-white'
-                                            }`}
-                                        >
-                                            {item.icon}
-                                            {item.label}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Mobile Menu Button - Großes Touch Target */}
-                            <div className="-mr-2 flex md:hidden">
-                                <button
-                                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                                    className="p-3 rounded-lg text-gray-200 hover:text-white hover:bg-slate-800 focus:outline-none focus:bg-slate-800 active:scale-95 transition-transform"
-                                    aria-label="Menü öffnen"
-                                >
-                                    {mobileMenuOpen ? <Icons.X className="w-7 h-7" /> : <Icons.Menu className="w-7 h-7" />}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Mobile Navigation Dropdown */}
-                    {mobileMenuOpen && (
-                        <div className="md:hidden bg-slate-900 border-t border-slate-800 absolute w-full shadow-2xl animate-fadeIn">
-                            <div className="px-2 pt-2 pb-4 space-y-1 sm:px-3">
-                                {navItems.map((item) => (
-                                    <button
-                                        key={item.id}
-                                        onClick={() => {
-                                            setActiveTab(item.id);
-                                            setMobileMenuOpen(false);
-                                        }}
-                                        className={`flex items-center gap-4 w-full text-left px-4 py-4 rounded-xl text-base font-semibold mb-2 transition-all active:scale-[0.98] ${
-                                            activeTab === item.id 
-                                            ? 'bg-blue-600 text-white shadow-lg' 
-                                            : 'text-gray-300 bg-slate-800/50 hover:bg-slate-800 hover:text-white'
-                                        }`}
-                                    >
-                                        <span className={activeTab === item.id ? "text-white" : "text-blue-400"}>{item.icon}</span>
-                                        {item.label}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </nav>
-            );
-        };
-
-        const HeroSection = ({ setActiveTab }) => (
-            <div className="relative bg-gradient-to-b from-slate-900 via-blue-900 to-slate-900 text-white py-16 px-4 overflow-hidden min-h-[500px] flex flex-col justify-center">
-                {/* Deko-Blobs */}
-                <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 md:w-96 md:h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-                <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 md:w-96 md:h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-                
-                <div className="max-w-4xl mx-auto text-center relative z-10">
-                    <div className="inline-block px-4 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs md:text-sm font-bold mb-6 uppercase tracking-wider">
-                        Luftsportgemeinschaft Hotzenwald
-                    </div>
-                    <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight mb-4 leading-tight">
-                        Lerne <span className="text-blue-400">Fliegen.</span><br/>
-                        Erlebe <span className="text-cyan-400">Freiheit.</span>
-                    </h1>
-                    <p className="text-lg md:text-2xl text-slate-300 mb-8 max-w-xl mx-auto leading-relaxed px-4">
-                        Deine Plattform für die Ausbildung in Hütten-Hotzenwald. Vom ersten Start bis zur Lizenz.
-                    </p>
-                    <div className="flex flex-col gap-4 px-4 sm:flex-row sm:justify-center">
-                        <button 
-                            onClick={() => setActiveTab('training')}
-                            className="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white rounded-xl font-bold text-lg transition-all shadow-lg shadow-blue-900/50 flex items-center justify-center gap-2 active:scale-95"
-                        >
-                            Ausbildung starten <Icons.ChevronRight className="w-5 h-5" />
-                        </button>
-                        <button 
-                            onClick={() => setActiveTab('quiz')}
-                            className="w-full sm:w-auto px-8 py-4 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 border border-slate-600 text-white rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2 active:scale-95"
-                        >
-                            Wissen testen <Icons.Award className="w-5 h-5" />
-                        </button>
-                    </div>
-                </div>
+    {/* News & Aktuelles */}
+    <div className="max-w-6xl mx-auto px-4">
+      <SectionHeading title="Aktuelles vom Verein" subtitle="Neuigkeiten rund um den Flugbetrieb und das Vereinsleben." />
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {siteContent.pages.home.news.map((item, idx) => (
+          <Card key={idx} className="p-6">
+            <div className="text-sm text-blue-600 font-semibold mb-2">{item.date}</div>
+            <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
+            <p className="text-gray-600">{item.text}</p>
+            <div className="mt-4 flex items-center text-blue-600 font-medium cursor-pointer hover:underline">
+              Mehr lesen <ArrowRight size={16} className="ml-2" />
             </div>
-        );
+          </Card>
+        ))}
+        {/* Wetter Widget Placeholder */}
+        <Card className="bg-blue-50 border-blue-100 p-6 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center gap-2 text-blue-800 font-bold mb-4">
+              <Cloud size={24} />
+              <span>Flugwetter Hütten</span>
+            </div>
+            <div className="text-4xl font-bold text-gray-800 mb-2">18°C</div>
+            <p className="text-gray-600">Wind: West 10 km/h</p>
+            <p className="text-gray-600">Basis: 2200m</p>
+          </div>
+          <button className="mt-4 text-sm text-blue-700 font-medium hover:underline text-left">
+            Detaillierter Wetterbericht &rarr;
+          </button>
+        </Card>
+      </div>
+    </div>
+  </div>
+);
 
-        const TrainingPath = () => (
-            <div className="max-w-5xl mx-auto px-4 py-8 md:py-12 animate-fadeIn pb-24">
-                <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-6 text-center">Dein Weg zum Pilotenschein</h2>
-                <div className="space-y-6">
-                    {trainingSteps.map((step, index) => (
-                        <div key={index} className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                            <div className="md:flex">
-                                <div className="bg-gradient-to-br from-blue-600 to-blue-500 p-6 text-white flex flex-row md:flex-col items-center gap-4 md:w-1/3 md:justify-center md:text-center">
-                                    <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm shrink-0">
-                                        {step.icon}
-                                    </div>
-                                    <div className="text-left md:text-center">
-                                        <h3 className="text-lg font-bold leading-tight">{step.title}</h3>
-                                        <p className="text-blue-100 text-sm">{step.subtitle}</p>
-                                    </div>
-                                </div>
-                                <div className="p-6 md:w-2/3 bg-slate-50 md:bg-white">
-                                    <p className="text-slate-700 font-medium mb-4">{step.desc}</p>
-                                    <ul className="space-y-3">
-                                        {step.details.map((detail, i) => (
-                                            <li key={i} className="flex items-start gap-3 text-slate-600 text-sm md:text-base">
-                                                <div className="mt-1.5 w-1.5 h-1.5 bg-blue-500 rounded-full flex-shrink-0"></div>
-                                                <span className="leading-snug">{detail}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+const AirportPage = () => (
+  <div className="max-w-5xl mx-auto px-4 py-8 animate-fadeIn">
+    <SectionHeading title={siteContent.pages.airport.title} />
+    
+    <div className="grid lg:grid-cols-2 gap-12 items-start">
+      <div className="space-y-6">
+        <p className="text-lg text-gray-700 leading-relaxed">
+          {siteContent.pages.airport.description}
+        </p>
+        
+        <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+          <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+            <Info size={20} className="text-blue-600"/> Flugplatzdaten
+          </h3>
+          <ul className="space-y-3">
+            {siteContent.pages.airport.facts.map((fact, idx) => (
+              <li key={idx} className="flex justify-between border-b border-gray-200 pb-2 last:border-0">
+                <span className="text-gray-600">{fact.label}</span>
+                <span className="font-semibold text-gray-900">{fact.value}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="space-y-6">
+        {/* Map Placeholder */}
+        <div className="bg-gray-200 rounded-xl h-64 flex items-center justify-center relative overflow-hidden group">
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-300">
+             <span className="text-gray-500 font-medium flex items-center gap-2">
+               <MapPin size={20}/> Karte / Anfahrtsskizze
+             </span>
+          </div>
+        </div>
+        
+        {/* Runway Visual Placeholder */}
+        <div className="bg-green-800 rounded-xl p-6 text-white text-center shadow-lg relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[linear-gradient(45deg,transparent_25%,white_25%,white_50%,transparent_50%,transparent_75%,white_75%,white_100%)] bg-[length:20px_20px]"></div>
+          <h3 className="relative z-10 text-2xl font-bold mb-1">Piste {siteContent.pages.airport.runway}</h3>
+          <p className="relative z-10 text-green-100">Grasbahn</p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const FleetPage = () => (
+  <div className="max-w-6xl mx-auto px-4 py-8 animate-fadeIn">
+    <SectionHeading title="Unsere Flugzeuge" subtitle="Vom Schulungsdoppelsitzer bis zum Hochleistungssegler." />
+    
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {siteContent.pages.fleet.map((plane, idx) => (
+        <Card key={idx} className="flex flex-col h-full">
+          <div className="h-48 bg-gray-200 relative">
+            <img src={plane.image} alt={plane.name} className="w-full h-full object-cover" />
+            <div className="absolute top-2 right-2 bg-white/90 px-2 py-1 rounded text-xs font-bold shadow-sm">
+              {plane.id}
+            </div>
+          </div>
+          <div className="p-6 flex-grow flex flex-col">
+            <h3 className="text-xl font-bold text-gray-900 mb-1">{plane.name}</h3>
+            <p className="text-blue-600 text-sm font-medium mb-3">{plane.type}</p>
+            <p className="text-gray-600 text-sm flex-grow">{plane.desc}</p>
+            <div className="mt-4 pt-4 border-t border-gray-100">
+               <button className="text-blue-600 text-sm font-medium hover:text-blue-800 flex items-center gap-1">
+                 Technische Daten <ChevronRight size={14}/>
+               </button>
+            </div>
+          </div>
+        </Card>
+      ))}
+    </div>
+  </div>
+);
+
+const TrainingPage = () => (
+  <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+    <SectionHeading title={siteContent.pages.training.title} subtitle={siteContent.pages.training.intro} />
+    
+    <div className="space-y-8 mt-12">
+      {siteContent.pages.training.steps.map((step, idx) => (
+        <div key={idx} className="flex gap-6 md:items-start group">
+          <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xl group-hover:bg-blue-600 group-hover:text-white transition-colors">
+            {idx + 1}
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
+            <p className="text-gray-600 leading-relaxed">{step.text}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div className="mt-16 bg-blue-50 rounded-2xl p-8 text-center border border-blue-100">
+      <h3 className="text-2xl font-bold text-gray-900 mb-4">Interesse geweckt?</h3>
+      <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+        Komm einfach an einem Wochenende bei schönem Wetter vorbei oder schreibe uns eine E-Mail.
+        Wir bieten regelmäßig Schnupperkurse an.
+      </p>
+      <Button>Kontakt aufnehmen</Button>
+    </div>
+  </div>
+);
+
+const FeesPage = () => (
+    <div className="max-w-3xl mx-auto px-4 py-8 animate-fadeIn">
+        <SectionHeading title={siteContent.pages.fees.title} subtitle={siteContent.pages.fees.intro} />
+        
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <table className="w-full">
+                <thead className="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Leistung</th>
+                        <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900">Preis</th>
+                    </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                    {siteContent.pages.fees.list.map((item, idx) => (
+                        <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                            <td className="px-6 py-4 text-gray-700">{item.item}</td>
+                            <td className="px-6 py-4 text-right font-medium text-gray-900">{item.price}</td>
+                        </tr>
                     ))}
-                </div>
+                </tbody>
+            </table>
+        </div>
+        <p className="mt-4 text-sm text-gray-500 text-center italic">
+            * Alle Angaben ohne Gewähr. Es gilt die aktuelle Gebührenordnung im Vereinsheim.
+        </p>
+    </div>
+);
+
+const ContactPage = () => (
+  <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+    <SectionHeading title="Kontakt & Anfahrt" />
+    
+    <div className="grid md:grid-cols-2 gap-12">
+      <Card className="p-8">
+        <h3 className="text-xl font-bold mb-6">Anschrift</h3>
+        <div className="space-y-4">
+          <div className="flex items-start gap-4">
+            <MapPin className="text-blue-600 mt-1" />
+            <div>
+              <p className="font-semibold">{siteContent.general.fullName}</p>
+              <p className="text-gray-600">{siteContent.general.location}</p>
+              <p className="text-gray-600">79XXX Rickenbach-Hütten</p>
             </div>
-        );
+          </div>
+          <div className="flex items-center gap-4">
+            <Mail className="text-blue-600" />
+            <a href={`mailto:${siteContent.general.contactEmail}`} className="text-gray-600 hover:text-blue-600">
+              {siteContent.general.contactEmail}
+            </a>
+          </div>
+          <div className="flex items-center gap-4">
+            <Phone className="text-blue-600" />
+            <span className="text-gray-600">+49 (0) 7765 XXX XX</span>
+          </div>
+        </div>
+      </Card>
 
-        const PracticeSection = () => {
-            const [checklist, setChecklist] = useState(checkListStart);
-            
-            const toggleItem = (id) => {
-                // Haptisches Feedback simulieren (optional bei nativen Apps, hier visuell)
-                setChecklist(checklist.map(item => 
-                    item.id === id ? { ...item, checked: !item.checked } : item
-                ));
-            };
+      <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+        <h3 className="text-xl font-bold mb-4">Schreib uns</h3>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+          <input type="text" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" placeholder="Dein Name" />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">E-Mail</label>
+          <input type="email" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" placeholder="deine@email.de" />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Nachricht</label>
+          <textarea rows="4" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" placeholder="Deine Nachricht an uns..."></textarea>
+        </div>
+        <Button className="w-full">Nachricht senden</Button>
+      </form>
+    </div>
+  </div>
+);
 
-            const resetChecklist = () => {
-                setChecklist(checklist.map(item => ({ ...item, checked: false })));
-            };
+/**
+ * HAUPT APP COMPONENT
+ */
+export default function App() {
+  const [currentPage, setCurrentPage] = useState('home');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-            const allChecked = checklist.every(i => i.checked);
+  // Scroll Effekt für Header
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-            return (
-                <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn pb-24">
-                    <h2 className="text-2xl font-bold text-slate-900 mb-6">Praxis & Checklisten</h2>
-                    
-                    <div className="grid md:grid-cols-2 gap-6">
-                        
-                        {/* Interactive Checklist - Auf Mobile ganz oben */}
-                        <div className="bg-slate-900 rounded-2xl shadow-xl p-5 md:p-6 text-white order-1 md:order-2 ring-1 ring-white/10">
-                            <div className="flex justify-between items-center mb-6 border-b border-slate-700 pb-4">
-                                <h3 className="text-lg font-bold flex items-center gap-2">
-                                    <Icons.CheckSquare className="text-green-400" /> Start-Check
-                                </h3>
-                                <button 
-                                    onClick={resetChecklist}
-                                    className="text-xs font-semibold bg-slate-700 px-3 py-1.5 rounded-full hover:bg-slate-600 active:bg-slate-500 transition"
-                                >
-                                    Neu
-                                </button>
-                            </div>
-                            
-                            <div className="space-y-2">
-                                {checklist.map((item) => (
-                                    <div 
-                                        key={item.id} 
-                                        onClick={() => toggleItem(item.id)}
-                                        className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all duration-150 select-none active:scale-[0.98] ${
-                                            item.checked 
-                                            ? 'bg-green-500/10 border border-green-500/30' 
-                                            : 'bg-slate-800 border border-slate-700 hover:bg-slate-750'
-                                        }`}
-                                    >
-                                        <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
-                                            item.checked ? 'bg-green-500 border-green-500' : 'border-slate-500'
-                                        }`}>
-                                            {item.checked && <Icons.CheckSquare className="w-5 h-5 text-white" />}
-                                        </div>
-                                        <span className={`text-base md:text-lg font-medium ${item.checked ? 'text-green-200 line-through decoration-green-500/50' : 'text-slate-100'}`}>
-                                            {item.text}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
+  const renderContent = () => {
+    switch(currentPage) {
+      case 'home': return <HomePage />;
+      case 'airport': return <AirportPage />;
+      case 'fleet': return <FleetPage />;
+      case 'training': return <TrainingPage />;
+      case 'fees': return <FeesPage />;
+      case 'contact': return <ContactPage />;
+      default: return <HomePage />;
+    }
+  };
 
-                            <div className={`mt-6 p-4 rounded-xl text-center font-bold text-lg transition-all duration-300 shadow-lg transform ${
-                                allChecked ? 'bg-green-600 text-white scale-105' : 'bg-slate-800 text-slate-500'
-                            }`}>
-                                {allChecked ? "✅ STARTBEREIT!" : "Checkliste unvollständig"}
-                            </div>
-                        </div>
+  return (
+    <div className="min-h-screen bg-white font-sans text-gray-900 selection:bg-blue-100">
+      
+      {/* Top Status Bar */}
+      <div className="bg-gray-900 text-white text-xs py-2 px-4">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <span className={`flex items-center gap-2 font-bold ${siteContent.status.isOpen ? 'text-green-400' : 'text-red-400'}`}>
+              <div className={`w-2 h-2 rounded-full ${siteContent.status.isOpen ? 'bg-green-400 animate-pulse' : 'bg-red-400'}`}></div>
+              {siteContent.status.message}
+            </span>
+            <span className="hidden sm:inline text-gray-400">|</span>
+            <span className="hidden sm:flex items-center gap-1 text-gray-400"><Wind size={12}/> {siteContent.general.location}</span>
+          </div>
+          <div className="text-gray-400">Update: {siteContent.status.lastUpdate}</div>
+        </div>
+      </div>
 
-                        <div className="space-y-6 order-2 md:order-1">
-                            <div className="bg-white rounded-2xl shadow-sm p-6 border-l-4 border-yellow-500">
-                                <h3 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
-                                    <Icons.AlertTriangle className="text-yellow-500 w-5 h-5" /> Safety First
-                                </h3>
-                                <ul className="space-y-4 text-slate-700">
-                                    <li className="flex gap-3"><span className="text-blue-500 font-bold">1.</span> Luftraumbeobachtung ist das Wichtigste!</li>
-                                    <li className="flex gap-3"><span className="text-blue-500 font-bold">2.</span> Startcheck immer LAUT durchführen.</li>
-                                    <li className="flex gap-3"><span className="text-blue-500 font-bold">3.</span> Bei Seilriss: Nachdrücken, Fahrt, Klinken.</li>
-                                </ul>
-                            </div>
-
-                            {/* NEU: Windenstart statt Kunstflug */}
-                            <div className="bg-gradient-to-br from-blue-600 to-teal-500 rounded-2xl shadow-lg p-6 text-white transform transition-transform active:scale-[0.98]">
-                                <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
-                                    <Icons.Wind className="w-6 h-6 text-yellow-300" /> Der Windenstart
-                                </h3>
-                                <p className="text-blue-50 text-sm mb-4 leading-relaxed">
-                                    Von 0 auf 100 km/h in nur 3 Sekunden! Die Winde zieht dich steil nach oben. 
-                                    In 300 bis 400 Metern Höhe klinkst du aus und die Stille beginnt.
-                                </p>
-                                <div className="bg-white/10 p-4 rounded-xl text-center backdrop-blur-sm border border-white/20">
-                                    <span className="text-yellow-300 font-bold text-sm block">Purer Schub & Freiheit! 🚀</span>
-                                </div>
-                            </div>
-
-                            {/* NEU: Flugzeugschlepp */}
-                            <div className="bg-gradient-to-br from-sky-600 to-indigo-600 rounded-2xl shadow-lg p-6 text-white transform transition-transform active:scale-[0.98]">
-                                <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
-                                    <Icons.Plane className="w-6 h-6 text-yellow-300 transform -rotate-45" /> Der Flugzeugschlepp
-                                </h3>
-                                <p className="text-indigo-100 text-sm mb-4 leading-relaxed">
-                                    Hinter der Motormaschine (z.B. Robin) geht es sanft aufwärts. 
-                                    Du lernst, dem Schlepper exakt zu folgen – wie an einer unsichtbaren Stange.
-                                </p>
-                                <div className="bg-white/10 p-4 rounded-xl text-center backdrop-blur-sm border border-white/20">
-                                    <span className="text-yellow-300 font-bold text-sm block">Teamwork & Panorama! 🌤️</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        const QuizSection = () => {
-            const [currentQuestion, setCurrentQuestion] = useState(0);
-            const [showResult, setShowResult] = useState(false);
-            const [score, setScore] = useState(0);
-            const [selectedOption, setSelectedOption] = useState(null);
-            const [isAnswered, setIsAnswered] = useState(false);
-
-            const handleAnswer = (index) => {
-                if (isAnswered) return;
-                setSelectedOption(index);
-                setIsAnswered(true);
-                if (index === quizQuestions[currentQuestion].correct) {
-                    setScore(score + 1);
-                }
-            };
-
-            const nextQuestion = () => {
-                if (currentQuestion < quizQuestions.length - 1) {
-                    setCurrentQuestion(currentQuestion + 1);
-                    setSelectedOption(null);
-                    setIsAnswered(false);
-                } else {
-                    setShowResult(true);
-                }
-            };
-
-            const restartQuiz = () => {
-                setCurrentQuestion(0);
-                setShowResult(false);
-                setScore(0);
-                setSelectedOption(null);
-                setIsAnswered(false);
-            };
-
-            if (showResult) {
-                return (
-                    <div className="max-w-xl mx-auto px-4 py-12 text-center animate-fadeIn pb-24">
-                        <div className="bg-white rounded-3xl shadow-xl p-8 border border-slate-100">
-                            <div className="inline-flex items-center justify-center p-6 rounded-full bg-yellow-50 mb-6 ring-8 ring-yellow-50">
-                                <Icons.Award className="w-16 h-16 text-yellow-500" />
-                            </div>
-                            <h2 className="text-3xl font-bold text-slate-900 mb-2">Quiz beendet!</h2>
-                            <p className="text-lg text-slate-600 mb-8">
-                                Dein Ergebnis: <span className="font-bold text-blue-600">{score}</span> / {quizQuestions.length}
-                            </p>
-                            <button 
-                                onClick={restartQuiz}
-                                className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 active:scale-95 transition-all shadow-lg shadow-blue-200"
-                            >
-                                Nochmal versuchen
-                            </button>
-                        </div>
-                    </div>
-                );
-            }
-
-            const question = quizQuestions[currentQuestion];
-
-            return (
-                <div className="max-w-xl mx-auto px-4 py-8 md:py-12 animate-fadeIn pb-24">
-                    <div className="flex justify-between items-end mb-4 px-1">
-                        <h2 className="text-xl font-bold text-slate-800">Wissens-Check</h2>
-                        <span className="text-slate-500 text-sm font-medium bg-slate-100 px-2 py-1 rounded-md">
-                            {currentQuestion + 1} / {quizQuestions.length}
-                        </span>
-                    </div>
-                    
-                    <div className="w-full bg-slate-200 rounded-full h-2 mb-6 overflow-hidden">
-                        <div 
-                            className="bg-blue-600 h-full rounded-full transition-all duration-300 ease-out" 
-                            style={{ width: `${((currentQuestion + 1) / quizQuestions.length) * 100}%` }}
-                        ></div>
-                    </div>
-
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-slate-100">
-                        <div className="p-6 md:p-8">
-                            <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-6 leading-relaxed">
-                                {question.question}
-                            </h3>
-                            
-                            <div className="space-y-3">
-                                {question.options.map((option, index) => {
-                                    let buttonStyle = "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100";
-                                    let icon = null;
-                                    
-                                    if (isAnswered) {
-                                        if (index === question.correct) {
-                                            buttonStyle = "bg-green-50 border-green-500 text-green-800 ring-1 ring-green-500";
-                                        } else if (index === selectedOption) {
-                                            buttonStyle = "bg-red-50 border-red-500 text-red-800 ring-1 ring-red-500";
-                                        } else {
-                                            buttonStyle = "bg-slate-50 border-slate-200 opacity-40";
-                                        }
-                                    }
-
-                                    return (
-                                        <button
-                                            key={index}
-                                            onClick={() => handleAnswer(index)}
-                                            disabled={isAnswered}
-                                            className={`w-full p-4 text-left rounded-xl border-2 font-medium transition-all duration-200 active:scale-[0.98] ${buttonStyle}`}
-                                        >
-                                            <div className="flex items-center justify-between">
-                                                <span>{option}</span>
-                                                {isAnswered && index === question.correct && <span className="text-green-600 font-bold">✓</span>}
-                                                {isAnswered && index === selectedOption && index !== question.correct && <span className="text-red-600 font-bold">✗</span>}
-                                            </div>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-
-                            {isAnswered && (
-                                <div className="mt-6 animate-fadeIn">
-                                    <div className="p-4 bg-blue-50 rounded-xl border border-blue-100 mb-4">
-                                        <p className="text-blue-900 text-sm leading-relaxed">
-                                            <span className="font-bold block mb-1">Erklärung:</span> 
-                                            {question.explanation}
-                                        </p>
-                                    </div>
-                                    <button 
-                                        onClick={nextQuestion}
-                                        className="w-full py-3.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-200"
-                                    >
-                                        Weiter <Icons.ChevronRight className="w-5 h-5" />
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        const ClubSection = () => (
-            <div className="max-w-5xl mx-auto px-4 py-8 md:py-12 animate-fadeIn pb-24">
-                <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden mb-8">
-                    <div className="bg-slate-900 p-8 text-white text-center">
-                        <h2 className="text-2xl md:text-4xl font-extrabold mb-2">Luftsportgemeinschaft</h2>
-                        <h2 className="text-2xl md:text-4xl font-extrabold text-blue-400 mb-6">Hotzenwald e.V.</h2>
-                        <div className="flex flex-wrap justify-center gap-4 text-sm font-medium text-slate-300">
-                            <span className="flex items-center gap-2 bg-slate-800 px-3 py-1 rounded-full"><Icons.Map className="w-4 h-4"/> Hütten-Hotzenwald</span>
-                            <span className="flex items-center gap-2 bg-slate-800 px-3 py-1 rounded-full"><Icons.Play className="w-4 h-4"/> Winde & F-Schlepp</span>
-                        </div>
-                    </div>
-                    <div className="p-6 md:p-8">
-                        <p className="text-slate-600 text-lg leading-relaxed mb-6">
-                            Seit 1950 fliegen wir auf dem wunderschönen Flugplatz im Südschwarzwald.
-                            Jugendförderung wird bei uns groß geschrieben.
-                        </p>
-                        
-                        {/* Event Card */}
-                        <div className="bg-gradient-to-tr from-blue-600 to-cyan-500 rounded-2xl p-1 shadow-lg transform hover:-translate-y-1 transition-transform">
-                            <div className="bg-white rounded-xl p-6 text-center h-full">
-                                <h3 className="text-lg font-bold text-slate-800 uppercase tracking-wide mb-2">Save the Date</h3>
-                                <div className="text-4xl md:text-5xl font-extrabold text-blue-600 mb-1">02.05.</div>
-                                <div className="text-lg font-semibold text-slate-400 mb-4">2026</div>
-                                <div className="inline-block bg-yellow-100 text-yellow-800 px-4 py-1 rounded-full font-bold text-sm mb-3">
-                                    Schnupperflugtag
-                                </div>
-                                <p className="text-slate-600 text-sm mb-6">
-                                    Erlebe den Verein, die Technik und fliege selbst mit! (ab 14 J.)
-                                </p>
-                                <a 
-                                    href="https://form.jotform.com/lghotzenwald/schnupperflugtag-der-lgh-am-2-mai-2" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="inline-block w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold transition-colors shadow-md active:scale-95"
-                                >
-                                    Jetzt anmelden
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="text-center">
-                    <h3 className="text-xl font-bold text-slate-800 mb-4">Lust bekommen?</h3>
-                    <a href="https://www.lghotzenwald.de" target="_blank" className="inline-flex w-full sm:w-auto items-center justify-center px-8 py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 active:scale-95 transition-all shadow-xl">
-                        Kontakt aufnehmen
-                    </a>
-                </div>
+      {/* Main Navigation */}
+      <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-md py-2' : 'bg-white py-4'}`}>
+        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
+          
+          {/* Logo Area */}
+          <div 
+            className="flex items-center gap-3 cursor-pointer group"
+            onClick={() => setCurrentPage('home')}
+          >
+            {/* Logo Placeholder - Text based if no image */}
+            <div className="bg-blue-600 text-white p-2 rounded-lg group-hover:bg-blue-700 transition-colors">
+              <Plane size={24} className="transform -rotate-45" />
             </div>
-        );
+            <div>
+              <h1 className="text-lg font-bold leading-none tracking-tight">LG Hotzenwald</h1>
+              <p className="text-xs text-gray-500 tracking-wide">LUFTSPORTGEMEINSCHAFT</p>
+            </div>
+          </div>
 
-        const Footer = () => (
-            <footer className="bg-slate-950 text-slate-500 py-8 border-t border-slate-900 mt-auto">
-                <div className="max-w-7xl mx-auto px-4 text-center text-sm">
-                    <p className="mb-2 font-medium">© 2026 Luftsportgemeinschaft Hotzenwald e.V.</p>
-                    <p className="opacity-60">Made for Glider Pilots ✈️</p>
-                </div>
-            </footer>
-        );
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-1">
+            {siteContent.nav.map(item => (
+              <button
+                key={item.id}
+                onClick={() => setCurrentPage(item.id)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                  currentPage === item.id 
+                    ? 'bg-blue-50 text-blue-700' 
+                    : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+            <Button variant="primary" className="ml-4 text-sm px-4 py-2">Mitglied werden</Button>
+          </nav>
 
-        const App = () => {
-            const [activeTab, setActiveTab] = useState('home');
-            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+          {/* Mobile Menu Toggle */}
+          <button 
+            className="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
 
-            useEffect(() => {
-                window.scrollTo(0, 0);
-            }, [activeTab]);
+        {/* Mobile Nav Dropdown */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden absolute top-full left-0 w-full bg-white border-t border-gray-100 shadow-lg py-4 px-4 flex flex-col gap-2">
+            {siteContent.nav.map(item => (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setCurrentPage(item.id);
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium ${
+                  currentPage === item.id 
+                    ? 'bg-blue-50 text-blue-700' 
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </header>
 
-            return (
-                <div className="min-h-screen flex flex-col bg-slate-50 font-sans text-slate-900">
-                    <Navigation 
-                        activeTab={activeTab} 
-                        setActiveTab={setActiveTab} 
-                        mobileMenuOpen={mobileMenuOpen}
-                        setMobileMenuOpen={setMobileMenuOpen}
-                    />
+      {/* Main Content Area */}
+      <main className="min-h-[calc(100vh-300px)] py-8">
+        {renderContent()}
+      </main>
 
-                    <main className="flex-grow">
-                        {activeTab === 'home' && (
-                            <>
-                                <HeroSection setActiveTab={setActiveTab} />
-                                <div className="py-8 bg-white pb-24">
-                                    <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
-                                        <div 
-                                            onClick={() => setActiveTab('training')}
-                                            className="p-6 rounded-2xl bg-slate-50 border border-slate-100 active:scale-[0.98] transition-transform cursor-pointer"
-                                        >
-                                            <div className="bg-blue-100 w-12 h-12 rounded-xl flex items-center justify-center text-blue-600 mb-4">
-                                                <Icons.BookOpen />
-                                            </div>
-                                            <h3 className="font-bold text-xl mb-2 text-slate-800">Die Ausbildung</h3>
-                                            <p className="text-slate-600 text-sm">Theorie, Praxis und Gesetze.</p>
-                                        </div>
-                                        <div 
-                                            onClick={() => setActiveTab('practice')}
-                                            className="p-6 rounded-2xl bg-slate-50 border border-slate-100 active:scale-[0.98] transition-transform cursor-pointer"
-                                        >
-                                            <div className="bg-cyan-100 w-12 h-12 rounded-xl flex items-center justify-center text-cyan-600 mb-4">
-                                                <Icons.CheckSquare />
-                                            </div>
-                                            <h3 className="font-bold text-xl mb-2 text-slate-800">Checklisten</h3>
-                                            <p className="text-slate-600 text-sm">Interaktiv für den Start.</p>
-                                        </div>
-                                        <div 
-                                            onClick={() => setActiveTab('club')}
-                                            className="p-6 rounded-2xl bg-slate-50 border border-slate-100 active:scale-[0.98] transition-transform cursor-pointer"
-                                        >
-                                            <div className="bg-indigo-100 w-12 h-12 rounded-xl flex items-center justify-center text-indigo-600 mb-4">
-                                                <Icons.Users />
-                                            </div>
-                                            <h3 className="font-bold text-xl mb-2 text-slate-800">Jugend & Events</h3>
-                                            <p className="text-slate-600 text-sm">Community & Schnupperflug.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </>
-                        )}
-                        
-                        {activeTab === 'training' && <TrainingPath />}
-                        {activeTab === 'practice' && <PracticeSection />}
-                        {activeTab === 'quiz' && <QuizSection />}
-                        {activeTab === 'club' && <ClubSection />}
-                    </main>
+      {/* Footer */}
+      <footer className="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8">
+          
+          <div className="col-span-1 md:col-span-2">
+            <h4 className="text-white text-lg font-bold mb-4">{siteContent.general.fullName}</h4>
+            <p className="max-w-sm mb-6 text-sm leading-relaxed">
+              Wir sind dein Verein für Segelflug im Südschwarzwald.
+              Erlebe die Faszination des lautlosen Fliegens in einer einzigartigen Gemeinschaft.
+            </p>
+            <div className="flex gap-4">
+               {/* Social Media Placeholders */}
+               <div className="w-8 h-8 bg-gray-800 rounded flex items-center justify-center hover:bg-blue-600 cursor-pointer transition">FB</div>
+               <div className="w-8 h-8 bg-gray-800 rounded flex items-center justify-center hover:bg-pink-600 cursor-pointer transition">IG</div>
+            </div>
+          </div>
 
-                    <Footer />
-                </div>
-            );
-        };
+          <div>
+            <h4 className="text-white font-bold mb-4">Quick Links</h4>
+            <ul className="space-y-2 text-sm">
+              <li className="hover:text-white cursor-pointer transition">Mitglied werden</li>
+              <li className="hover:text-white cursor-pointer transition">Gastflüge & Gutscheine</li>
+              <li className="hover:text-white cursor-pointer transition">Webcam</li>
+              <li className="hover:text-white cursor-pointer transition">PPR Anfrage</li>
+            </ul>
+          </div>
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
-</body>
-</html>
+          <div>
+            <h4 className="text-white font-bold mb-4">Rechtliches</h4>
+            <ul className="space-y-2 text-sm">
+              <li className="hover:text-white cursor-pointer transition">Impressum</li>
+              <li className="hover:text-white cursor-pointer transition">Datenschutz</li>
+              <li className="hover:text-white cursor-pointer transition">Satzung</li>
+              <li className="hover:text-white cursor-pointer transition">Gebührenordnung</li>
+            </ul>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-gray-800 text-center text-xs">
+          &copy; {new Date().getFullYear()} {siteContent.general.fullName}. Alle Rechte vorbehalten.
+        </div>
+      </footer>
+
+    </div>
+  );
+}
