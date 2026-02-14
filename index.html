@@ -57,6 +57,7 @@
         const ArrowRight = (props) => <Icon {...props}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></Icon>;
         const ChevronRight = (props) => <Icon {...props}><path d="m9 18 6-6-6-6"/></Icon>;
         const ChevronUp = (props) => <Icon {...props}><path d="m18 15-6-6-6 6"/></Icon>;
+        const ChevronDown = (props) => <Icon {...props}><path d="m6 9 6 6 6-6"/></Icon>;
         const ChevronLeft = (props) => <Icon {...props}><path d="m15 18-6-6 6-6"/></Icon>;
         const Cloud = (props) => <Icon {...props}><path d="M17.5 19c0 2.167-1.697 3.925-3.868 4.002L12 23h-3.5c-3.038 0-5.5-2.462-5.5-5.5 0-2.486 1.637-4.606 3.9-5.263l.314-.09C8.327 7.283 11.237 5 14.5 5c3.59 0 6.5 2.91 6.5 6.5 0 .234-.012.466-.035.696C20.96 12.28 23 14.363 23 17a4.002 4.002 0 0 1-3.998 4h-.002z"/></Icon>;
         const Info = (props) => <Icon {...props}><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></Icon>;
@@ -92,7 +93,16 @@
                 { id: 'training', label: 'Ausbildung' },
                 { id: 'competition', label: 'Hotzenwaldwettbewerb' },
                 { id: 'history', label: 'Chronik' },
-                { id: 'contact', label: 'Kontakt' }
+                { id: 'contact', label: 'Kontakt' },
+                { 
+                    id: 'internal', 
+                    label: 'Intern', 
+                    children: [
+                        { label: 'vereinsflieger.de', link: 'https://vereinsflieger.de/', external: true },
+                        { id: 'preparation', label: 'Flugvorbereitung' },
+                        { id: 'links', label: 'Links' }
+                    ]
+                }
             ],
             pages: {
                 home: {
@@ -938,6 +948,105 @@
             </div>
         );
 
+        const PreparationPage = () => (
+            <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+                <SectionHeading title="Flugvorbereitung" subtitle="Alles für den sicheren Flug" />
+                
+                <div className="space-y-8">
+                    <Card className="p-6 border-l-4 border-blue-500">
+                         <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <Cloud size={24} className="text-blue-600"/> Wetter
+                         </h3>
+                         <div className="space-y-4">
+                            <div>
+                                <a href="https://www.dwd.de/DE/fachnutzer/luftfahrt/teaser/luftsportberichte/fbdl60_edzf_node.html" target="_blank" rel="noopener noreferrer" className="text-lg font-bold text-blue-600 hover:underline flex items-center gap-2">
+                                    DWD Flugwetterbericht (Luftsportbericht) <ExternalLink size={18}/>
+                                </a>
+                                <p className="text-gray-600 mt-1">
+                                    Offizieller Flugwetterbericht des Deutschen Wetterdienstes für unser Gebiet.
+                                </p>
+                            </div>
+                         </div>
+                    </Card>
+                    
+                    <Card className="p-6 border-l-4 border-red-500">
+                         <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <MapPin size={24} className="text-red-600"/> Luftraum & NOTAMs
+                         </h3>
+                         <div className="space-y-6 divide-y divide-gray-100">
+                            <div>
+                                <a href="https://www.skybriefing.com/de/dabs" target="_blank" rel="noopener noreferrer" className="text-lg font-bold text-blue-600 hover:underline flex items-center gap-2">
+                                    DABS (Daily Airspace Bulletin Switzerland) <ExternalLink size={18}/>
+                                </a>
+                                <p className="text-gray-600 mt-1">
+                                    Grafische Darstellung der aktuellen Luftraumstatus und Gefahrengebiete in der Schweiz. Da wir nah an der Grenze fliegen, ist dies für das Briefing unverzichtbar.
+                                </p>
+                            </div>
+                             <div className="pt-4">
+                                <a href="https://notaminfo.com/switzerlandmap" target="_blank" rel="noopener noreferrer" className="text-lg font-bold text-blue-600 hover:underline flex items-center gap-2">
+                                    NOTAM Info – Flight Planning Map – Schweiz <ExternalLink size={18}/>
+                                </a>
+                                <p className="text-gray-600 mt-1">
+                                    Visuelle Aufbereitung von NOTAMs auf einer Karte für die Schweiz. Hilft schnell zu erfassen, wo Einschränkungen bestehen.
+                                </p>
+                            </div>
+                             <div className="pt-4">
+                                <a href="https://notaminfo.com/germanymap" target="_blank" rel="noopener noreferrer" className="text-lg font-bold text-blue-600 hover:underline flex items-center gap-2">
+                                    NOTAM Info – Flight Planning Map – Deutschland <ExternalLink size={18}/>
+                                </a>
+                                <p className="text-gray-600 mt-1">
+                                    Kartenbasierte Übersicht der NOTAMs für Deutschland zur einfachen Flugvorbereitung.
+                                </p>
+                            </div>
+                         </div>
+                    </Card>
+                </div>
+            </div>
+        );
+
+        const LinksPage = () => (
+            <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+                <SectionHeading title="Links" subtitle="Interessante Webseiten für Segelflieger" />
+                <div className="grid gap-6">
+                    <Card className="p-6 hover:shadow-md transition-shadow">
+                        <a href="https://www.weglide.org/flight?club=LG%2520Hotzenwald,23" target="_blank" rel="noopener noreferrer" className="text-xl font-bold text-blue-600 hover:underline flex items-center gap-2 mb-2">
+                            WeGlide <ExternalLink size={20}/>
+                        </a>
+                        <p className="text-gray-700">
+                            Die führende Plattform für Segelflug-Wettbewerbe und Fluganalysen. Hier findest du direkt die Flüge unseres Vereins (LG Hotzenwald) und kannst sehen, wo unsere Piloten unterwegs waren.
+                        </p>
+                    </Card>
+
+                    <Card className="p-6 hover:shadow-md transition-shadow">
+                        <a href="https://glidertracker.de/#lat=47.633&lon=7.941&z=11&nowelcome" target="_blank" rel="noopener noreferrer" className="text-xl font-bold text-blue-600 hover:underline flex items-center gap-2 mb-2">
+                            GliderTracker.de <ExternalLink size={20}/>
+                        </a>
+                        <p className="text-gray-700">
+                            Live-Tracking von Segelflugzeugen basierend auf FLARM- und OGN-Daten. Der Link führt direkt zur Kartenansicht rund um unseren Flugplatz, ideal für die Bodencrew und Interessierte.
+                        </p>
+                    </Card>
+
+                    <Card className="p-6 hover:shadow-md transition-shadow">
+                        <a href="https://www.daec.de/sportarten/segelflug/downloads-termine/" target="_blank" rel="noopener noreferrer" className="text-xl font-bold text-blue-600 hover:underline flex items-center gap-2 mb-2">
+                            DAeC - Downloads & Termine Segelflug <ExternalLink size={20}/>
+                        </a>
+                        <p className="text-gray-700">
+                           Die offizielle Seite der Bundeskommission Segelflug. Hier gibt es wichtige Dokumente, Wettbewerbsordnungen, Formulare und den aktuellen Terminkalender für den Segelflug in Deutschland.
+                        </p>
+                    </Card>
+
+                    <Card className="p-6 hover:shadow-md transition-shadow">
+                        <a href="https://e2.aviationreporting.eu/reporting" target="_blank" rel="noopener noreferrer" className="text-xl font-bold text-blue-600 hover:underline flex items-center gap-2 mb-2">
+                            EU Aviation Reporting <ExternalLink size={20}/>
+                        </a>
+                        <p className="text-gray-700">
+                            Das zentrale Meldeportal der Europäischen Union für sicherheitsrelevante Ereignisse in der Luftfahrt (Occurrences). Dient der Verbesserung der Flugsicherheit durch "Just Culture".
+                        </p>
+                    </Card>
+                </div>
+            </div>
+        );
+
         const ContactPage = () => {
             const [formData, setFormData] = useState({ name: '', email: '', message: '' });
 
@@ -1179,138 +1288,6 @@
             );
         };
 
-        const ImpressumPage = () => (
-             <div className="max-w-3xl mx-auto px-4 py-8 animate-fadeIn text-gray-700">
-                <SectionHeading title="Impressum" />
-                <div className="space-y-6">
-                    <div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">Angaben gemäß § 5 TMG</h3>
-                        <p>{siteContent.general.name}</p>
-                        <p>{siteContent.general.address}</p>
-                    </div>
-                    <div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">Vertreten durch</h3>
-                        <p>1. Vorsitzender: Thomas Brosi</p>
-                        <p>Kassierer: Paul Albietz Kaiser</p>
-                    </div>
-                    <div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">Kontakt</h3>
-                        <p>Telefon: {siteContent.general.phone}</p>
-                        <p>E-Mail: {siteContent.general.contactEmail}</p>
-                    </div>
-                    <div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">Registereintrag</h3>
-                        <p>Eintragung im Vereinsregister.</p>
-                        <p>Registergericht: Amtsgericht Freiburg</p>
-                        <p>Registernummer: VR XXXXX (Muster)</p>
-                    </div>
-                </div>
-             </div>
-        );
-
-        const DatenschutzPage = () => (
-             <div className="max-w-3xl mx-auto px-4 py-8 animate-fadeIn text-gray-700">
-                <SectionHeading title="Datenschutzerklärung" />
-                <div className="space-y-6">
-                    <p className="font-bold">1. Datenschutz auf einen Blick</p>
-                    <p>
-                        Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen.
-                    </p>
-                    <p className="font-bold">2. Allgemeine Hinweise und Pflichtinformationen</p>
-                    <p>
-                        Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.
-                    </p>
-                    <p className="font-bold">3. Datenerfassung auf unserer Website</p>
-                    <p>
-                        <strong>Cookies:</strong> Unsere Internetseiten verwenden teilweise so genannte Cookies. Cookies richten auf Ihrem Rechner keinen Schaden an und enthalten keine Viren.
-                    </p>
-                    <p>
-                        <strong>Server-Log-Dateien:</strong> Der Provider der Seiten erhebt und speichert automatisch Informationen in so genannten Server-Log-Dateien, die Ihr Browser automatisch an uns übermittelt.
-                    </p>
-                    <p>
-                        <strong>Kontaktformular:</strong> Wenn Sie uns per Kontaktformular Anfragen zukommen lassen, werden Ihre Angaben aus dem Anfrageformular inklusive der von Ihnen dort angegebenen Kontaktdaten zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen bei uns gespeichert.
-                    </p>
-                </div>
-             </div>
-        );
-
-        const SchnupperflugPage = ({ onBack }) => (
-            <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
-                <button onClick={onBack} className="text-blue-600 flex items-center gap-1 mb-6 hover:underline">
-                    <ChevronLeft size={20} /> Zurück zur Übersicht
-                </button>
-                <SectionHeading title="Schnupperflugtag 2026" subtitle="Erlebe die Faszination Segelflug am 2. Mai 2026" />
-                
-                <div className="space-y-8 text-gray-700">
-                    <div className="prose max-w-none">
-                        <p className="text-lg">
-                            Wolltest du schon immer mal abheben und die Welt von oben sehen?
-                            Dann ist unser Schnupperflugtag genau das Richtige für dich!
-                        </p>
-                        <p>
-                            Der Segelflug ist eine der faszinierendsten Arten zu fliegen. 
-                            Ohne Motor, nur mit der Kraft der Natur, gleitest du lautlos über den Schwarzwald. 
-                            An unserem Schnupperflugtag geben wir dir einen umfassenden Einblick in unser Hobby.
-                        </p>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-8">
-                        <div className="bg-blue-50 p-6 rounded-xl border border-blue-100">
-                            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                <Check className="text-blue-600"/> Das erwartet dich
-                            </h3>
-                            <ul className="space-y-3">
-                                <li>• Sicherheitseinweisung & Briefing</li>
-                                <li>• Vorstellung der Flugzeuge & Technik</li>
-                                <li>• Start an der Winde mit erfahrenem Fluglehrer</li>
-                                <li>• Möglichkeit, selbst das Steuer zu übernehmen</li>
-                                <li>• Diverse Vorträge rund ums Fliegen</li>
-                                <li>• Nach dem Flugbetrieb Grillwurst und Getränk zum Ausklang des Tages</li>
-                            </ul>
-                        </div>
-                        
-                        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                <Info className="text-blue-600"/> Rahmenbedingungen
-                            </h3>
-                            <ul className="space-y-3 text-sm">
-                                <li className="flex justify-between border-b pb-2">
-                                    <span>Datum:</span>
-                                    <span className="font-bold">02. Mai 2026</span>
-                                </li>
-                                <li className="flex justify-between border-b pb-2">
-                                    <span>Zeit:</span>
-                                    <span className="font-bold">09:00 - ca. 18:00 Uhr</span>
-                                </li>
-                                <li className="flex justify-between border-b pb-2">
-                                    <span>Ort:</span>
-                                    <span className="font-bold">Flugplatz Hütten-Hotzenwald</span>
-                                </li>
-                                <li className="flex justify-between border-b pb-2">
-                                    <span>Kostenbeitrag:</span>
-                                    <span className="font-bold">30,00 € (alles inklusive)</span>
-                                </li>
-                                <li className="flex justify-between pt-2">
-                                    <span>Voraussetzung:</span>
-                                    <span>Mindestalter 14 Jahre, <br/>normale Gesundheit</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 text-center">
-                        <h3 className="text-xl font-bold mb-2">Lust bekommen?</h3>
-                        <p className="mb-4">Dann melde dich gleich an und sichere dir deinen Platz im Cockpit.</p>
-                        <div className="flex justify-center gap-4">
-                            <Button onClick={() => window.open('https://form.jotform.com/lghotzenwald/schnupperflugtag-der-lgh-am-2-mai-2', '_blank')}>
-                                Anmelden
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-
         // --- HAUPT APP ---
 
         function App() {
@@ -1333,12 +1310,14 @@
                     case 'training': return <TrainingPage setCurrentPage={setCurrentPage} />;
                     case 'fees': return <FeesPage />;
                     case 'competition': return <CompetitionPage />; 
-                    case 'membership': return <MembershipPage />; // Neuer Case
-                    case 'guestflight': return <GuestFlightPage />; // Neuer Case
+                    case 'membership': return <MembershipPage />; 
+                    case 'guestflight': return <GuestFlightPage />; 
                     case 'contact': return <ContactPage />;
                     case 'impressum': return <ImpressumPage />;
                     case 'datenschutz': return <DatenschutzPage />;
                     case 'schnupperflugtag': return <SchnupperflugPage onBack={() => setCurrentPage('home')} />;
+                    case 'preparation': return <PreparationPage />;
+                    case 'links': return <LinksPage />;
                     default: return <HomePage setCurrentPage={setCurrentPage} />;
                 }
             };
@@ -1362,19 +1341,59 @@
                             </div>
 
                             <nav className="hidden md:flex items-center gap-1">
-                                {siteContent.nav.map(item => (
-                                    <button
-                                        key={item.id}
-                                        onClick={() => setCurrentPage(item.id)}
-                                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                                            currentPage === item.id 
-                                                ? 'bg-blue-50 text-blue-700' 
-                                                : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
-                                        }`}
-                                    >
-                                        {item.label}
-                                    </button>
-                                ))}
+                                {siteContent.nav.map(item => {
+                                    if (item.children) {
+                                        return (
+                                            <div key={item.id} className="relative group">
+                                                <button
+                                                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-1 text-gray-600 hover:text-blue-600 hover:bg-gray-50`}
+                                                >
+                                                    {item.label}
+                                                    <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" /> 
+                                                </button>
+                                                <div className="absolute right-0 top-full pt-2 w-48 hidden group-hover:block z-50">
+                                                    <div className="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden py-1">
+                                                        {item.children.map((child, idx) => (
+                                                            child.external ? (
+                                                                <a 
+                                                                    key={idx}
+                                                                    href={child.link}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                                                                >
+                                                                    {child.label}
+                                                                </a>
+                                                            ) : (
+                                                                <button
+                                                                    key={idx}
+                                                                    onClick={() => setCurrentPage(child.id)}
+                                                                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                                                                >
+                                                                    {child.label}
+                                                                </button>
+                                                            )
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    }
+                                    
+                                    return (
+                                        <button
+                                            key={item.id}
+                                            onClick={() => setCurrentPage(item.id)}
+                                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                                                currentPage === item.id 
+                                                    ? 'bg-blue-50 text-blue-700' 
+                                                    : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
+                                            }`}
+                                        >
+                                            {item.label}
+                                        </button>
+                                    );
+                                })}
                                 <Button onClick={() => setCurrentPage('membership')} variant="primary" className="ml-4 text-sm px-4 py-2">Mitglied werden</Button>
                             </nav>
 
@@ -1387,23 +1406,57 @@
                         </div>
 
                         {isMobileMenuOpen && (
-                            <div className="md:hidden absolute top-full left-0 w-full bg-white border-t border-gray-100 shadow-lg py-4 px-4 flex flex-col gap-2">
+                            <div className="md:hidden absolute top-full left-0 w-full bg-white border-t border-gray-100 shadow-lg py-4 px-4 flex flex-col gap-2 h-[calc(100vh-80px)] overflow-y-auto">
                                 {siteContent.nav.map(item => (
-                                    <button
-                                        key={item.id}
-                                        onClick={() => {
-                                            setCurrentPage(item.id);
-                                            setIsMobileMenuOpen(false);
-                                        }}
-                                        className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium ${
-                                            currentPage === item.id 
-                                                ? 'bg-blue-50 text-blue-700' 
-                                                : 'text-gray-600 hover:bg-gray-50'
-                                        }`}
-                                    >
-                                        {item.label}
-                                    </button>
+                                    <div key={item.id}>
+                                        {item.children ? (
+                                            <>
+                                                <div className="px-4 py-2 text-sm font-bold text-gray-900">{item.label}</div>
+                                                <div className="pl-4 border-l-2 border-gray-100 ml-4 flex flex-col gap-2">
+                                                    {item.children.map((child, idx) => (
+                                                        child.external ? (
+                                                            <a 
+                                                                key={idx}
+                                                                href={child.link}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="w-full text-left px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50"
+                                                            >
+                                                                {child.label}
+                                                            </a>
+                                                        ) : (
+                                                            <button
+                                                                key={idx}
+                                                                onClick={() => {
+                                                                    setCurrentPage(child.id);
+                                                                    setIsMobileMenuOpen(false);
+                                                                }}
+                                                                className="w-full text-left px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50"
+                                                            >
+                                                                {child.label}
+                                                            </button>
+                                                        )
+                                                    ))}
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <button
+                                                onClick={() => {
+                                                    setCurrentPage(item.id);
+                                                    setIsMobileMenuOpen(false);
+                                                }}
+                                                className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium ${
+                                                    currentPage === item.id 
+                                                        ? 'bg-blue-50 text-blue-700' 
+                                                        : 'text-gray-600 hover:bg-gray-50'
+                                                }`}
+                                            >
+                                                {item.label}
+                                            </button>
+                                        )}
+                                    </div>
                                 ))}
+                                <Button onClick={() => { setCurrentPage('membership'); setIsMobileMenuOpen(false); }} variant="primary" className="mx-4 mt-2">Mitglied werden</Button>
                             </div>
                         )}
                     </header>
