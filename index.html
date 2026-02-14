@@ -100,7 +100,8 @@
                     children: [
                         { label: 'vereinsflieger.de', link: 'https://vereinsflieger.de/', external: true },
                         { id: 'preparation', label: 'Flugvorbereitung' },
-                        { id: 'links', label: 'Links' }
+                        { id: 'links', label: 'Links' },
+                        { id: 'fees', label: 'Gebühren' }
                     ]
                 }
             ],
@@ -483,7 +484,7 @@
                         specs: [
                             { label: "Spannweite", value: "11,02 m" },
                             { label: "Reisegeschwindigkeit", value: "ca. 170 km/h" },
-                            { label: "Motor", value: "Lycoming O-540 (235/260 PS)" },
+                            { label: "Motor", value: "Lycoming O-540 (235 PS)" },
                             { label: "Max. Abflugmasse", value: "1317 kg" },
                             { label: "Sitzplätze", value: "1" }
                         ]
@@ -1287,6 +1288,79 @@
                 </div>
             );
         };
+        
+        // --- FEHLENDE KOMPONENTEN HINZUGEFÜGT ---
+        
+        const FeesPage = () => (
+            <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+                <SectionHeading title={siteContent.pages.fees.title} subtitle={siteContent.pages.fees.intro} />
+                <Card className="p-8">
+                    <ul className="divide-y divide-gray-100">
+                        {siteContent.pages.fees.list.map((fee, idx) => (
+                            <li key={idx} className="py-4 flex justify-between items-center">
+                                <span className="font-medium text-gray-700">{fee.item}</span>
+                                <span className="font-bold text-blue-600">{fee.price}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </Card>
+            </div>
+        );
+
+        const SchnupperflugPage = ({ onBack }) => (
+            <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+                <button onClick={onBack} className="mb-6 flex items-center text-blue-600 font-medium hover:underline">
+                    <ChevronLeft size={20} /> Zurück
+                </button>
+                <SectionHeading title="Schnupperflugtag 2026" subtitle="Komm vorbei und heb ab!" />
+                <Card className="p-8">
+                    <div className="prose max-w-none text-gray-700">
+                        <p>Am 02.05.2026 öffnen wir unsere Tore für alle Flugbegeisterten.</p>
+                        <h3 className="text-xl font-bold mt-4 mb-2">Was dich erwartet:</h3>
+                        <ul className="list-disc pl-5 space-y-2 mb-4">
+                            <li>Rundflüge im Segelflugzeug</li>
+                            <li>Infos zur Ausbildung</li>
+                            <li>Verpflegung (Kaffee, Kuchen, Grill)</li>
+                        </ul>
+                        <p>Wir freuen uns auf deinen Besuch!</p>
+                    </div>
+                </Card>
+            </div>
+        );
+
+        const ImpressumPage = () => (
+            <div className="max-w-3xl mx-auto px-4 py-8 animate-fadeIn">
+                <SectionHeading title="Impressum" />
+                <Card className="p-8 space-y-4">
+                    <p><strong>{siteContent.general.name}</strong></p>
+                    <p>{siteContent.general.address}</p>
+                    <p><strong>Kontakt:</strong><br/>
+                    Telefon: {siteContent.general.phone}<br/>
+                    E-Mail: {siteContent.general.contactEmail}</p>
+                    <p><strong>Vertreten durch den Vorstand:</strong><br/>
+                    (Hier Namen einfügen)</p>
+                    <p><strong>Registergericht:</strong><br/>
+                    Amtsgericht (Ort)<br/>
+                    Registernummer: VR (Nummer)</p>
+                </Card>
+            </div>
+        );
+
+        const DatenschutzPage = () => (
+            <div className="max-w-3xl mx-auto px-4 py-8 animate-fadeIn">
+                <SectionHeading title="Datenschutzerklärung" />
+                <Card className="p-8 space-y-4 text-gray-700">
+                    <h3 className="text-xl font-bold text-gray-900">1. Datenschutz auf einen Blick</h3>
+                    <p>Allgemeine Hinweise: Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen.</p>
+                    <h3 className="text-xl font-bold text-gray-900">2. Hosting</h3>
+                    <p>Wir hosten die Inhalte unserer Website bei folgendem Anbieter: (Name des Hosters).</p>
+                    <h3 className="text-xl font-bold text-gray-900">3. Allgemeine Hinweise und Pflichtinformationen</h3>
+                    <p>Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:<br/>
+                    {siteContent.general.name}<br/>
+                    {siteContent.general.address}</p>
+                </Card>
+            </div>
+        );
 
         // --- HAUPT APP ---
 
@@ -1294,6 +1368,11 @@
             const [currentPage, setCurrentPage] = useState('home');
             const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
             const [scrolled, setScrolled] = useState(false);
+
+            // Scroll nach oben bei Seitenwechsel
+            useEffect(() => {
+                window.scrollTo(0, 0);
+            }, [currentPage]);
 
             useEffect(() => {
                 const handleScroll = () => setScrolled(window.scrollY > 20);
