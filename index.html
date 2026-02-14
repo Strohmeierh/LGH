@@ -100,8 +100,7 @@
                     children: [
                         { label: 'vereinsflieger.de', link: 'https://vereinsflieger.de/', external: true },
                         { id: 'preparation', label: 'Flugvorbereitung' },
-                        { id: 'links', label: 'Links' },
-                        { id: 'fees', label: 'Gebühren' }
+                        { id: 'links', label: 'Links' }
                     ]
                 }
             ],
@@ -532,16 +531,6 @@
                              title: "5. Die Lizenz (SPL)",
                              text: "Mit frühestens 16 Jahren kannst du die Prüfung ablegen. Mit der SPL-Lizenz in der Tasche steht dir der Himmel offen. Du kannst Streckenflüge machen, an Wettbewerben teilnehmen oder Freunde mitnehmen."
                         }
-                    ]
-                },
-                fees: {
-                    title: "Gebühren & Kosten",
-                    intro: "Segelfliegen ist günstiger als man denkt. Hier eine Übersicht unserer aktuellen Gebühren.",
-                    list: [
-                        { item: "Mitgliedsbeitrag Aktiv (Erwachsene)", price: "XX,00 € / Monat" },
-                        { item: "Mitgliedsbeitrag Jugend", price: "XX,00 € / Monat" },
-                        { item: "Windenstart", price: "X,00 €" },
-                        { item: "Flugminute Segelflug", price: "0,XX €" }
                     ]
                 }
             }
@@ -1291,40 +1280,80 @@
         
         // --- FEHLENDE KOMPONENTEN HINZUGEFÜGT ---
         
-        const FeesPage = () => (
-            <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
-                <SectionHeading title={siteContent.pages.fees.title} subtitle={siteContent.pages.fees.intro} />
-                <Card className="p-8">
-                    <ul className="divide-y divide-gray-100">
-                        {siteContent.pages.fees.list.map((fee, idx) => (
-                            <li key={idx} className="py-4 flex justify-between items-center">
-                                <span className="font-medium text-gray-700">{fee.item}</span>
-                                <span className="font-bold text-blue-600">{fee.price}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </Card>
-            </div>
-        );
-
         const SchnupperflugPage = ({ onBack }) => (
             <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
                 <button onClick={onBack} className="mb-6 flex items-center text-blue-600 font-medium hover:underline">
                     <ChevronLeft size={20} /> Zurück
                 </button>
-                <SectionHeading title="Schnupperflugtag 2026" subtitle="Komm vorbei und heb ab!" />
-                <Card className="p-8">
-                    <div className="prose max-w-none text-gray-700">
-                        <p>Am 02.05.2026 öffnen wir unsere Tore für alle Flugbegeisterten.</p>
-                        <h3 className="text-xl font-bold mt-4 mb-2">Was dich erwartet:</h3>
-                        <ul className="list-disc pl-5 space-y-2 mb-4">
-                            <li>Rundflüge im Segelflugzeug</li>
-                            <li>Infos zur Ausbildung</li>
-                            <li>Verpflegung (Kaffee, Kuchen, Grill)</li>
-                        </ul>
-                        <p>Wir freuen uns auf deinen Besuch!</p>
+                <SectionHeading title="Schnupperflugtag 2026" subtitle="Ein Tag auf dem Segelflugplatz" />
+                <div className="grid md:grid-cols-2 gap-8">
+                    <div className="space-y-6">
+                        <Card className="p-8">
+                            <h3 className="text-xl font-bold mb-4 text-gray-900">Was erwartet Dich?</h3>
+                            <p className="text-gray-700 mb-4">
+                                Erlebe einen unvergesslichen Tag auf dem Flugplatz Hütten-Hotzenwald. Wir bieten dir die Möglichkeit, den Segelflugsport hautnah kennenzulernen.
+                            </p>
+                            <ul className="space-y-3">
+                                <li className="flex items-start gap-2">
+                                    <Check className="text-green-600 mt-1 flex-shrink-0" />
+                                    <span>Ein spannender Schnupperflug an der Winde</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <Check className="text-green-600 mt-1 flex-shrink-0" />
+                                    <span>Diverse Vorträge und Infos rund ums Fliegen</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <Check className="text-green-600 mt-1 flex-shrink-0" />
+                                    <span>Geselliges Beisammensein auf dem Flugplatz</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <Check className="text-green-600 mt-1 flex-shrink-0" />
+                                    <span>Zum Abschluss eine leckere Grillwurst inklusive</span>
+                                </li>
+                            </ul>
+                        </Card>
+                        
+                        <Card className="p-8 bg-blue-50 border-blue-100">
+                            <h3 className="text-xl font-bold mb-4 text-blue-900">Eckdaten</h3>
+                            <div className="space-y-2 text-blue-800">
+                                <div className="flex justify-between">
+                                    <span>Datum:</span>
+                                    <span className="font-bold">02. Mai 2026</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>Uhrzeit:</span>
+                                    <span className="font-bold">ab 10:00 Uhr</span>
+                                </div>
+                                <div className="flex justify-between pt-2 border-t border-blue-200">
+                                    <span>Kostenbeitrag:</span>
+                                    <span className="font-bold text-lg">30,00 €</span>
+                                </div>
+                            </div>
+                        </Card>
                     </div>
-                </Card>
+
+                    <div className="flex flex-col justify-center space-y-6">
+                        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 text-center">
+                            <h3 className="text-2xl font-bold mb-4">Jetzt Anmelden!</h3>
+                            <p className="text-gray-600 mb-6">
+                                Sichere dir deinen Platz für dieses besondere Erlebnis. Die Plätze sind begrenzt!
+                            </p>
+                            <a 
+                                href="https://form.jotform.com/lghotzenwald/schnupperflugtag-der-lgh-am-2-mai-2" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="inline-block w-full"
+                            >
+                                <Button className="w-full py-4 text-lg shadow-xl hover:scale-[1.02] transform transition-transform">
+                                    Zur Anmeldung (JotForm) <ExternalLink size={20} className="inline ml-2" />
+                                </Button>
+                            </a>
+                        </div>
+                        <p className="text-sm text-center text-gray-500">
+                            Hinweis: Die Anmeldung erfolgt über ein externes Formular.
+                        </p>
+                    </div>
+                </div>
             </div>
         );
 
@@ -1338,26 +1367,10 @@
                     Telefon: {siteContent.general.phone}<br/>
                     E-Mail: {siteContent.general.contactEmail}</p>
                     <p><strong>Vertreten durch den Vorstand:</strong><br/>
-                    (Hier Namen einfügen)</p>
+                    Thomas Brosi</p>
                     <p><strong>Registergericht:</strong><br/>
-                    Amtsgericht (Ort)<br/>
+                    Amtsgericht Waldshut-Tiengen<br/>
                     Registernummer: VR (Nummer)</p>
-                </Card>
-            </div>
-        );
-
-        const DatenschutzPage = () => (
-            <div className="max-w-3xl mx-auto px-4 py-8 animate-fadeIn">
-                <SectionHeading title="Datenschutzerklärung" />
-                <Card className="p-8 space-y-4 text-gray-700">
-                    <h3 className="text-xl font-bold text-gray-900">1. Datenschutz auf einen Blick</h3>
-                    <p>Allgemeine Hinweise: Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen.</p>
-                    <h3 className="text-xl font-bold text-gray-900">2. Hosting</h3>
-                    <p>Wir hosten die Inhalte unserer Website bei folgendem Anbieter: (Name des Hosters).</p>
-                    <h3 className="text-xl font-bold text-gray-900">3. Allgemeine Hinweise und Pflichtinformationen</h3>
-                    <p>Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:<br/>
-                    {siteContent.general.name}<br/>
-                    {siteContent.general.address}</p>
                 </Card>
             </div>
         );
@@ -1387,13 +1400,11 @@
                     case 'history': return <HistoryPage />;
                     case 'fleet': return <FleetPage />;
                     case 'training': return <TrainingPage setCurrentPage={setCurrentPage} />;
-                    case 'fees': return <FeesPage />;
                     case 'competition': return <CompetitionPage />; 
                     case 'membership': return <MembershipPage />; 
                     case 'guestflight': return <GuestFlightPage />; 
                     case 'contact': return <ContactPage />;
                     case 'impressum': return <ImpressumPage />;
-                    case 'datenschutz': return <DatenschutzPage />;
                     case 'schnupperflugtag': return <SchnupperflugPage onBack={() => setCurrentPage('home')} />;
                     case 'preparation': return <PreparationPage />;
                     case 'links': return <LinksPage />;
@@ -1577,7 +1588,6 @@
                                 <h4 className="text-white font-bold mb-4">Rechtliches</h4>
                                 <ul className="space-y-2 text-sm">
                                     <li onClick={() => setCurrentPage('impressum')} className="hover:text-white cursor-pointer transition">Impressum</li>
-                                    <li onClick={() => setCurrentPage('datenschutz')} className="hover:text-white cursor-pointer transition">Datenschutz</li>
                                 </ul>
                             </div>
                         </div>
