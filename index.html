@@ -851,7 +851,7 @@
         };
 
         const MembershipPage = () => {
-            const [formData, setFormData] = useState({ name: '', email: '', phone: '', address: '', dob: '', message: '' });
+            const [formData, setFormData] = useState({ name: '', email: '', phone: '', address: '', message: '' });
 
             const handleSubmit = (e) => {
                 e.preventDefault();
@@ -860,7 +860,6 @@
                     `Interesse an einer Mitgliedschaft\n\n` +
                     `Name: ${formData.name}\n` +
                     `Adresse: ${formData.address}\n` +
-                    `Geburtsdatum: ${formData.dob}\n` +
                     `Email: ${formData.email}\n` +
                     `Telefon: ${formData.phone}\n\n` +
                     `Nachricht:\n${formData.message}`
@@ -906,15 +905,9 @@
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Anschrift</label>
                                     <input type="text" name="address" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
                                 </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Geburtsdatum</label>
-                                        <input type="date" name="dob" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
-                                        <input type="tel" name="phone" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
-                                    </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
+                                    <input type="tel" name="phone" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">E-Mail</label>
