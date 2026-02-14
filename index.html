@@ -1153,17 +1153,144 @@
             );
         };
 
+        const ImpressumPage = () => (
+             <div className="max-w-3xl mx-auto px-4 py-8 animate-fadeIn text-gray-700">
+                <SectionHeading title="Impressum" />
+                <div className="space-y-6">
+                    <div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">Angaben gemäß § 5 TMG</h3>
+                        <p>{siteContent.general.name}</p>
+                        <p>{siteContent.general.address}</p>
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">Vertreten durch</h3>
+                        <p>1. Vorsitzender: Thomas Brosi</p>
+                        <p>Kassierer: Paul Albietz Kaiser</p>
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">Kontakt</h3>
+                        <p>Telefon: {siteContent.general.phone}</p>
+                        <p>E-Mail: {siteContent.general.contactEmail}</p>
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">Registereintrag</h3>
+                        <p>Eintragung im Vereinsregister.</p>
+                        <p>Registergericht: Amtsgericht Freiburg</p>
+                        <p>Registernummer: VR XXXXX (Muster)</p>
+                    </div>
+                </div>
+             </div>
+        );
+
+        const DatenschutzPage = () => (
+             <div className="max-w-3xl mx-auto px-4 py-8 animate-fadeIn text-gray-700">
+                <SectionHeading title="Datenschutzerklärung" />
+                <div className="space-y-6">
+                    <p className="font-bold">1. Datenschutz auf einen Blick</p>
+                    <p>
+                        Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen.
+                    </p>
+                    <p className="font-bold">2. Allgemeine Hinweise und Pflichtinformationen</p>
+                    <p>
+                        Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.
+                    </p>
+                    <p className="font-bold">3. Datenerfassung auf unserer Website</p>
+                    <p>
+                        <strong>Cookies:</strong> Unsere Internetseiten verwenden teilweise so genannte Cookies. Cookies richten auf Ihrem Rechner keinen Schaden an und enthalten keine Viren.
+                    </p>
+                    <p>
+                        <strong>Server-Log-Dateien:</strong> Der Provider der Seiten erhebt und speichert automatisch Informationen in so genannten Server-Log-Dateien, die Ihr Browser automatisch an uns übermittelt.
+                    </p>
+                    <p>
+                        <strong>Kontaktformular:</strong> Wenn Sie uns per Kontaktformular Anfragen zukommen lassen, werden Ihre Angaben aus dem Anfrageformular inklusive der von Ihnen dort angegebenen Kontaktdaten zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen bei uns gespeichert.
+                    </p>
+                </div>
+             </div>
+        );
+
+        const SchnupperflugPage = ({ onBack }) => (
+            <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+                <button onClick={onBack} className="text-blue-600 flex items-center gap-1 mb-6 hover:underline">
+                    <ChevronLeft size={20} /> Zurück zur Übersicht
+                </button>
+                <SectionHeading title="Schnupperflugtag 2026" subtitle="Erlebe die Faszination Segelflug am 2. Mai 2026" />
+                
+                <div className="space-y-8 text-gray-700">
+                    <div className="prose max-w-none">
+                        <p className="text-lg">
+                            Wolltest du schon immer mal abheben und die Welt von oben sehen?
+                            Dann ist unser Schnupperflugtag genau das Richtige für dich!
+                        </p>
+                        <p>
+                            Der Segelflug ist eine der faszinierendsten Arten zu fliegen. 
+                            Ohne Motor, nur mit der Kraft der Natur, gleitest du lautlos über den Schwarzwald. 
+                            An unserem Schnupperflugtag geben wir dir einen umfassenden Einblick in unser Hobby.
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-8">
+                        <div className="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <Check className="text-blue-600"/> Das erwartet dich
+                            </h3>
+                            <ul className="space-y-3">
+                                <li>• Sicherheitseinweisung & Briefing</li>
+                                <li>• Vorstellung der Flugzeuge & Technik</li>
+                                <li>• Start an der Winde mit erfahrenem Fluglehrer</li>
+                                <li>• Möglichkeit, selbst das Steuer zu übernehmen</li>
+                                <li>• Diverse Vorträge rund ums Fliegen</li>
+                                <li>• Nach dem Flugbetrieb Grillwurst und Getränk zum Ausklang des Tages</li>
+                            </ul>
+                        </div>
+                        
+                        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <Info className="text-blue-600"/> Rahmenbedingungen
+                            </h3>
+                            <ul className="space-y-3 text-sm">
+                                <li className="flex justify-between border-b pb-2">
+                                    <span>Datum:</span>
+                                    <span className="font-bold">02. Mai 2026</span>
+                                </li>
+                                <li className="flex justify-between border-b pb-2">
+                                    <span>Zeit:</span>
+                                    <span className="font-bold">09:00 - ca. 18:00 Uhr</span>
+                                </li>
+                                <li className="flex justify-between border-b pb-2">
+                                    <span>Ort:</span>
+                                    <span className="font-bold">Flugplatz Hütten-Hotzenwald</span>
+                                </li>
+                                <li className="flex justify-between border-b pb-2">
+                                    <span>Kostenbeitrag:</span>
+                                    <span className="font-bold">30,00 € (alles inklusive)</span>
+                                </li>
+                                <li className="flex justify-between pt-2">
+                                    <span>Voraussetzung:</span>
+                                    <span>Mindestalter 14 Jahre, <br/>normale Gesundheit</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 text-center">
+                        <h3 className="text-xl font-bold mb-2">Lust bekommen?</h3>
+                        <p className="mb-4">Dann melde dich gleich an und sichere dir deinen Platz im Cockpit.</p>
+                        <div className="flex justify-center gap-4">
+                            <Button onClick={() => window.open('https://form.jotform.com/lghotzenwald/schnupperflugtag-der-lgh-am-2-mai-2', '_blank')}>
+                                Anmelden
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
         // --- HAUPT APP ---
 
         function App() {
             const [currentPage, setCurrentPage] = useState('home');
             const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
             const [scrolled, setScrolled] = useState(false);
-
-            // Scroll to top whenever currentPage changes
-            useEffect(() => {
-                window.scrollTo(0, 0);
-            }, [currentPage]);
 
             useEffect(() => {
                 const handleScroll = () => setScrolled(window.scrollY > 20);
