@@ -3,16 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luftsportgemeinschaft Hotzenwald e.V.</title>
     
+    <!-- SEO Meta Tags -->
+    <title>Luftsportgemeinschaft Hotzenwald e.V. | Segelfliegen im Südschwarzwald</title>
+    <meta name="description" content="Erlebe die Faszination Segelfliegen im Südschwarzwald bei der Luftsportgemeinschaft Hotzenwald e.V. am Flugplatz Hütten. Infos zu Ausbildung, Gastflügen und Flugzeugpark.">
+    <meta name="keywords" content="Segelfliegen, Schwarzwald, Hotzenwald, Flugplatz Hütten, Flugausbildung, Segelflugzeug, Mitfliegen, Gastflug, Luftsport">
+    <meta name="author" content="Luftsportgemeinschaft Hotzenwald e.V.">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn etc.) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.lghotzenwald.de/">
+    <meta property="og:title" content="Luftsportgemeinschaft Hotzenwald e.V.">
+    <meta property="og:description" content="Erlebe die Faszination Segelfliegen im Südschwarzwald. Alle Infos zum Verein, Flugplatz Hütten und zur Ausbildung.">
+    <!-- <meta property="og:image" content="LINK_ZU_EINEM_SCHOENEN_VORSCHAUBILD.jpg"> -->
+
     <!-- Tailwind CSS für das Design -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- React und ReactDOM (die "Motoren" der Seite) -->
+    <!-- React und ReactDOM -->
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
     
-    <!-- Babel (übersetzt den modernen Code für den Browser) -->
+    <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <!-- Google Fonts -->
@@ -37,7 +50,6 @@
 <body class="bg-gray-50 text-gray-900">
     <div id="root"></div>
 
-    <!-- Hier beginnt der eigentliche Programmcode -->
     <script type="text/babel">
         const { useState, useEffect } = React;
 
@@ -68,7 +80,6 @@
         const Clock = (props) => <Icon {...props}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></Icon>;
         const BookOpen = (props) => <Icon {...props}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></Icon>;
 
-
         // --- KONFIGURATION (HIER TEXTE ÄNDERN) ---
         const siteContent = {
             general: {
@@ -87,7 +98,6 @@
                 lastUpdate: "Heute, 09:30 Uhr"
             },
             nav: [
-                // 'Home' entfernt, da Klick auf Logo zur Startseite führt
                 { id: 'airport', label: 'Flugplatz & Infrastruktur' },
                 { id: 'fleet', label: 'Flugzeugpark' },
                 { id: 'training', label: 'Ausbildung' },
@@ -107,7 +117,7 @@
             ],
             pages: {
                 home: {
-                    heroTitle: "Fliegen über dem Südschwarzwald",
+                    heroTitle: "Segelfliegen im Südschwarzwald",
                     heroSubtitle: "Willkommen bei der Luftsportgemeinschaft Hotzenwald e.V. auf dem Flugplatz Hütten.",
                     news: [
                         { 
@@ -144,7 +154,7 @@
                             time: "Wettbewerbswoche",
                             title: "Hotzenwaldwettbewerb", 
                             text: "Spannende Wettbewerbsflüge über dem Schwarzwald. Zuschauer sind herzlich willkommen.",
-                            linkTo: "competition", // Link hinzugefügt
+                            linkTo: "competition",
                             highlight: false 
                         },
                         { 
@@ -223,7 +233,6 @@
                         }
                     ]
                 },
-                // Neue Daten für die Wettbewerbs-Seite
                 competition: {
                     title: "Hotzenwaldwettbewerb 2026",
                     subtitle: "Tradition und sportlicher Vergleich über dem Südschwarzwald",
@@ -512,7 +521,6 @@
                 training: {
                     title: "Deine Ausbildung zum Piloten",
                     intro: "Bock auf Abenteuer? Heb ab mit uns! Hier erfährst du, wie du vom Fußgänger zum Piloten wirst. Segelfliegen ist Teamwork, High-Tech und Natur pur.",
-                    // steps now just strings/data, rendered in component for interactivity
                     steps: [
                         {
                              title: "1. Check-In (Voraussetzungen)",
@@ -544,13 +552,23 @@
 
         // --- KOMPONENTEN ---
 
-        const Button = ({ children, variant = "primary", onClick, className = "" }) => {
-            const baseStyle = "px-6 py-2 rounded-md font-medium transition-all duration-200";
+        // SEO Anpassung: Button unterstützt nun 'href' Props, um als echter Link ('a' Tag) gerendert zu werden.
+        const Button = ({ children, variant = "primary", onClick, href, className = "", target, rel }) => {
+            const baseStyle = "px-6 py-2 rounded-md font-medium transition-all duration-200 inline-block text-center cursor-pointer";
             const variants = {
                 primary: "bg-blue-600 text-white hover:bg-blue-700 shadow-md",
                 outline: "border-2 border-blue-600 text-blue-600 hover:bg-blue-50",
                 ghost: "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
             };
+            
+            if (href) {
+                return (
+                    <a href={href} target={target} rel={rel} className={`${baseStyle} ${variants[variant]} ${className}`}>
+                        {children}
+                    </a>
+                );
+            }
+            
             return (
                 <button onClick={onClick} className={`${baseStyle} ${variants[variant]} ${className}`}>
                     {children}
@@ -567,50 +585,48 @@
         );
 
         const Card = ({ title, children, className = "" }) => (
-            <div className={`bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow ${className}`}>
+            <section className={`bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow ${className}`}>
                 {children}
-            </div>
+            </section>
         );
 
         // --- SEITEN (PAGES) ---
 
-        const HomePage = ({ setCurrentPage }) => {
-            // Live Webcam Refresh Logic with Secure Proxy - Refresh immediately on mount
+        const HomePage = () => {
             const [webcamUrl, setWebcamUrl] = useState(`https://wsrv.nl/?url=www.lgh-platz.de/cam/cam31.jpg&t=${new Date().getTime()}`);
             const [webcamError, setWebcamError] = useState(false);
             
             useEffect(() => {
                 const interval = setInterval(() => {
-                    // Update timestamp to prevent caching
                     setWebcamUrl(`https://wsrv.nl/?url=www.lgh-platz.de/cam/cam31.jpg&t=${new Date().getTime()}`);
-                }, 60000); // Refresh every 60 seconds
+                }, 60000);
                 return () => clearInterval(interval);
             }, []);
 
             return (
             <div className="space-y-16 animate-fadeIn">
-                <div className="relative h-[600px] rounded-2xl overflow-hidden shadow-xl mx-4 lg:mx-0">
+                <section className="relative h-[600px] rounded-2xl overflow-hidden shadow-xl mx-4 lg:mx-0">
                     <div className="absolute inset-0 bg-gray-900/40 z-10"></div>
                     <img 
                         src="public/images/Startbildschirm.jpg" 
-                        alt="Segelflugzeug über dem Schwarzwald" 
+                        alt="Segelflugzeug im Flug über der Landschaft des Südschwarzwaldes" 
                         className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center text-white p-6">
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">{siteContent.pages.home.heroTitle}</h1>
                         <p className="text-xl md:text-2xl mb-8 max-w-2xl drop-shadow-md">{siteContent.pages.home.heroSubtitle}</p>
                         <div className="flex gap-4 flex-col sm:flex-row">
-                            <button onClick={() => setCurrentPage('guestflight')} className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition shadow-lg">
+                            <Button href="#guestflight" variant="primary" className="shadow-lg">
                                 Mitfliegen
-                            </button>
-                            <button onClick={() => setCurrentPage('membership')} className="px-8 py-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white text-white rounded-lg font-semibold transition shadow-lg">
+                            </Button>
+                            <Button href="#membership" className="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white text-white shadow-lg">
                                 Mitglied werden
-                            </button>
+                            </Button>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <div className="max-w-6xl mx-auto px-4">
+                <main className="max-w-6xl mx-auto px-4">
                     <SectionHeading title="Aktuelles" subtitle="Termine & Veranstaltungen 2026" />
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {siteContent.pages.home.news.map((item, idx) => (
@@ -625,12 +641,12 @@
                                 </div>
                                 <div className="mt-4 flex flex-col gap-2">
                                      {item.linkTo ? (
-                                        <div 
-                                            className="text-blue-600 font-medium cursor-pointer hover:underline flex items-center"
-                                            onClick={() => setCurrentPage(item.linkTo)}
+                                        <a 
+                                            href={`#${item.linkTo}`}
+                                            className="text-blue-600 font-medium hover:underline flex items-center inline-block"
                                         >
                                             Mehr lesen <ArrowRight size={16} className="ml-2" />
-                                        </div>
+                                        </a>
                                      ) : item.highlight && (
                                         <div className="text-xs font-bold text-blue-600 uppercase tracking-wider">
                                             Nicht verpassen!
@@ -641,7 +657,7 @@
                         ))}
                         
                         {/* Wetter Widget */}
-                        <a href="http://www.lgh-platz.de/wetter/index.html" target="_blank" rel="noopener noreferrer" className="block">
+                        <a href="http://www.lgh-platz.de/wetter/index.html" target="_blank" rel="noopener noreferrer" className="block h-full">
                             <Card className="bg-blue-50 border-blue-100 p-6 h-full hover:bg-blue-100 transition-colors cursor-pointer group">
                                 <div className="flex items-center gap-2 text-blue-800 font-bold mb-4">
                                     <Cloud size={24} />
@@ -659,20 +675,19 @@
                         <div className="block h-full">
                             <Card className="bg-gray-100 border-gray-200 h-full hover:shadow-md transition-shadow cursor-pointer group overflow-hidden relative min-h-[250px] flex flex-col">
                                 <div className="relative h-full w-full flex-grow bg-black flex items-center justify-center">
-                                    {/* Bild der Webcam - Gesichert via Proxy */}
                                     {!webcamError ? (
                                         <img 
                                             src={webcamUrl}
-                                            alt="Live Webcam" 
+                                            alt="Aktuelles Livebild der Flugplatz Webcam" 
                                             className="max-h-full max-w-full object-contain"
                                             onError={() => setWebcamError(true)}
                                         />
                                     ) : (
                                         <div className="text-white text-center p-4">
                                             <Camera size={48} className="mx-auto mb-2 opacity-50"/>
-                                            <p className="mb-2">Vorschau nicht verfügbar (Mixed Content).</p>
-                                            <Button onClick={() => window.open('http://www.lgh-platz.de/cam/cam31.jpg', '_blank')}>
-                                                Webcam in neuem Tab öffnen
+                                            <p className="mb-2">Vorschau nicht verfügbar.</p>
+                                            <Button href="http://www.lgh-platz.de/cam/cam31.jpg" target="_blank">
+                                                Webcam öffnen
                                             </Button>
                                         </div>
                                     )}
@@ -692,13 +707,13 @@
                             </Card>
                         </div>
                     </div>
-                </div>
+                </main>
             </div>
             );
         };
 
         const AirportPage = () => (
-            <div className="max-w-5xl mx-auto px-4 py-8 animate-fadeIn">
+            <article className="max-w-5xl mx-auto px-4 py-8 animate-fadeIn">
                 <SectionHeading title={siteContent.pages.airport.title} />
                 <div className="grid lg:grid-cols-2 gap-12 items-start">
                     <div className="space-y-6">
@@ -735,7 +750,7 @@
                         <div className="bg-white border border-gray-200 rounded-xl h-64 flex flex-col items-center justify-center relative overflow-hidden group hover:shadow-lg transition-shadow">
                             <img 
                                 src="public/images/EDSF-Luftbild.jpg" 
-                                alt="Luftbild Flugplatz" 
+                                alt="Luftbild des Flugplatzes Hütten-Hotzenwald (EDSF)" 
                                 className="absolute inset-0 w-full h-full object-cover"
                             />
                             <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors"></div>
@@ -751,11 +766,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </article>
         );
 
         const HistoryPage = () => (
-            <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+            <article className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
                 <SectionHeading title={siteContent.pages.history.title} subtitle={siteContent.pages.history.subtitle} />
                 <div className="grid gap-6">
                     {siteContent.pages.history.chapters.map((chapter, idx) => (
@@ -782,7 +797,7 @@
                         </a>
                     ))}
                 </div>
-            </div>
+            </article>
         );
 
         const FleetPage = () => {
@@ -790,13 +805,13 @@
             const toggleDetails = (idx) => setExpandedId(expandedId === idx ? null : idx);
 
             return (
-                <div className="max-w-6xl mx-auto px-4 py-8 animate-fadeIn">
+                <article className="max-w-6xl mx-auto px-4 py-8 animate-fadeIn">
                     <SectionHeading title="Unsere Flugzeuge" subtitle="Vom Schulungsdoppelsitzer bis zum Hochleistungssegler." />
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {siteContent.pages.fleet.map((plane, idx) => (
                             <Card key={idx} className="flex flex-col h-full">
                                 <div className="h-48 bg-gray-200 relative">
-                                    <img src={plane.image} alt={plane.name} className="w-full h-full object-cover" />
+                                    <img src={plane.image} alt={`Segelflugzeug ${plane.name} (${plane.type})`} className="w-full h-full object-cover" />
                                     <div className="absolute top-2 right-2 bg-white/90 px-2 py-1 rounded text-xs font-bold shadow-sm">
                                         {plane.id}
                                     </div>
@@ -810,6 +825,7 @@
                                         <button 
                                             onClick={() => toggleDetails(idx)}
                                             className="text-blue-600 text-sm font-medium hover:text-blue-800 flex items-center gap-1 w-full"
+                                            aria-expanded={expandedId === idx}
                                         >
                                             {expandedId === idx ? (
                                                 <>Weniger Details <ChevronUp size={14}/></>
@@ -836,12 +852,12 @@
                             </Card>
                         ))}
                     </div>
-                </div>
+                </article>
             );
         };
 
-        const TrainingPage = ({ setCurrentPage }) => (
-            <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+        const TrainingPage = () => (
+            <article className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
                 <SectionHeading title={siteContent.pages.training.title} subtitle={siteContent.pages.training.intro} />
                 <div className="space-y-8 mt-12">
                     {siteContent.pages.training.steps.map((step, idx) => (
@@ -855,12 +871,12 @@
                                 {step.id === 'schnupper' ? (
                                     <div className="text-gray-600 leading-relaxed">
                                         Wir bieten regelmäßig Schnupperkurse an. Der nächste Termin ist der{' '}
-                                        <span 
-                                            className="text-blue-600 font-bold cursor-pointer hover:underline"
-                                            onClick={() => setCurrentPage('schnupperflugtag')}
+                                        <a 
+                                            href="#schnupperflugtag"
+                                            className="text-blue-600 font-bold hover:underline"
                                         >
                                             Schnupperflugtag am 02.05.2026
-                                        </span>.
+                                        </a>.
                                     </div>
                                 ) : step.subjects ? (
                                     // Sonderbehandlung für Theorie mit Liste
@@ -881,19 +897,19 @@
                         </div>
                     ))}
                 </div>
-                <div className="mt-16 bg-blue-50 rounded-2xl p-8 text-center border border-blue-100">
+                <section className="mt-16 bg-blue-50 rounded-2xl p-8 text-center border border-blue-100">
                     <h3 className="text-2xl font-bold text-gray-900 mb-4">Interesse geweckt?</h3>
                     <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
                         Komm einfach an einem Wochenende bei schönem Wetter vorbei oder schreibe uns eine E-Mail.
                         Wir bieten regelmäßig Schnupperkurse an.
                     </p>
-                    <Button onClick={() => setCurrentPage('contact')}>Kontakt aufnehmen</Button>
-                </div>
-            </div>
+                    <Button href="#contact">Kontakt aufnehmen</Button>
+                </section>
+            </article>
         );
 
         const CompetitionPage = () => (
-            <div className="max-w-5xl mx-auto px-4 py-8 animate-fadeIn">
+            <article className="max-w-5xl mx-auto px-4 py-8 animate-fadeIn">
                 <SectionHeading title={siteContent.pages.competition.title} subtitle={siteContent.pages.competition.subtitle} />
                 
                 <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
@@ -909,7 +925,7 @@
                         </div>
 
                         <div className="pt-4">
-                            <Button onClick={() => window.open(siteContent.pages.competition.externalLink, '_blank')} className="flex items-center gap-2">
+                            <Button href={siteContent.pages.competition.externalLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
                                 Zur Wettbewerbs-Webseite <ExternalLink size={18} />
                             </Button>
                         </div>
@@ -919,7 +935,7 @@
                         <div className="relative bg-white p-3 shadow-xl rounded-xl rotate-2 hover:rotate-0 transition-transform duration-500 max-w-xs">
                             <img 
                                 src="public/images/Marcus.jpg" 
-                                alt="Marcus Neubronner" 
+                                alt="Wettbewerbsleiter Marcus Neubronner" 
                                 className="w-full h-auto rounded-lg object-cover aspect-[3/4]"
                             />
                             <div className="text-center mt-3 font-caveat text-2xl text-gray-700">
@@ -933,7 +949,7 @@
                     <div className="absolute inset-0 bg-gray-900/10 group-hover:bg-gray-900/0 transition-colors z-10"></div>
                     <img 
                         src="public/images/Wettbewerb.jpg" 
-                        alt="Wettbewerbsfeld vor dem Start" 
+                        alt="Segelflugzeuge stehen im Wettbewerbsfeld (Grid) bereit zum Start" 
                         className="w-full h-[400px] object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-8 z-20">
@@ -941,11 +957,11 @@
                         <p className="text-gray-200">Spannung im Grid kurz vor dem Start</p>
                     </div>
                 </div>
-            </div>
+            </article>
         );
 
         const PreparationPage = () => (
-            <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+            <article className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
                 <SectionHeading title="Flugvorbereitung" subtitle="Alles für den sicheren Flug" />
                 
                 <div className="space-y-8">
@@ -997,11 +1013,11 @@
                          </div>
                     </Card>
                 </div>
-            </div>
+            </article>
         );
 
         const LinksPage = () => (
-            <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+            <article className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
                 <SectionHeading title="Links" subtitle="Interessante Webseiten für Segelflieger" />
                 <div className="grid gap-6">
                     <Card className="p-6 hover:shadow-md transition-shadow">
@@ -1040,7 +1056,7 @@
                         </p>
                     </Card>
                 </div>
-            </div>
+            </article>
         );
 
         const ContactPage = () => {
@@ -1058,7 +1074,7 @@
             };
 
             return (
-                <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+                <article className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
                     <SectionHeading title="Kontakt & Anfahrt" />
                     <div className="grid md:grid-cols-2 gap-12">
                         <Card className="p-8">
@@ -1088,8 +1104,9 @@
                         <form className="space-y-4" onSubmit={handleSubmit}>
                             <h3 className="text-xl font-bold mb-4">Schreib uns</h3>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="contact-name">Name</label>
                                 <input 
+                                    id="contact-name"
                                     type="text" 
                                     name="name"
                                     value={formData.name}
@@ -1100,8 +1117,9 @@
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">E-Mail</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="contact-email">E-Mail</label>
                                 <input 
+                                    id="contact-email"
                                     type="email" 
                                     name="email"
                                     value={formData.email}
@@ -1112,8 +1130,9 @@
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Nachricht</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="contact-message">Nachricht</label>
                                 <textarea 
+                                    id="contact-message"
                                     rows="4" 
                                     name="message"
                                     value={formData.message}
@@ -1126,7 +1145,7 @@
                             <Button className="w-full">Nachricht senden</Button>
                         </form>
                     </div>
-                </div>
+                </article>
             );
         };
 
@@ -1152,7 +1171,7 @@
             };
 
             return (
-                <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+                <article className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
                     <SectionHeading title="Mitglied werden" subtitle="Werde Teil unserer Fliegergemeinschaft!" />
                     
                     <div className="grid md:grid-cols-2 gap-12">
@@ -1178,30 +1197,30 @@
                             <form className="space-y-4" onSubmit={handleSubmit}>
                                 <h3 className="text-xl font-bold mb-4">Interesse bekunden</h3>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                                    <input type="text" name="name" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
+                                    <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="member-name">Name</label>
+                                    <input id="member-name" type="text" name="name" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Anschrift</label>
-                                    <input type="text" name="address" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
+                                    <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="member-address">Anschrift</label>
+                                    <input id="member-address" type="text" name="address" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
-                                    <input type="tel" name="phone" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
+                                    <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="member-phone">Telefon</label>
+                                    <input id="member-phone" type="tel" name="phone" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">E-Mail</label>
-                                    <input type="email" name="email" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
+                                    <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="member-email">E-Mail</label>
+                                    <input id="member-email" type="email" name="email" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Nachricht / Vorkenntnisse</label>
-                                    <textarea rows="3" name="message" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Hast du schon eine Lizenz?"></textarea>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="member-message">Nachricht / Vorkenntnisse</label>
+                                    <textarea id="member-message" rows="3" name="message" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Hast du schon eine Lizenz?"></textarea>
                                 </div>
                                 <Button className="w-full">Antrag anfordern</Button>
                             </form>
                         </Card>
                     </div>
-                </div>
+                </article>
             );
         };
 
@@ -1228,7 +1247,7 @@
             };
 
             return (
-                <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+                <article className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
                     <SectionHeading title="Schnupperflug" subtitle="Erlebe den Schwarzwald von oben" />
                     
                     <div className="grid md:grid-cols-2 gap-12">
@@ -1251,43 +1270,42 @@
                             <form className="space-y-4" onSubmit={handleSubmit}>
                                 <h3 className="text-xl font-bold mb-4">Schnupperflug anfragen</h3>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                                    <input type="text" name="name" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
+                                    <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="guest-name">Name</label>
+                                    <input id="guest-name" type="text" name="name" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
-                                        <input type="tel" name="phone" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required/>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="guest-phone">Telefon</label>
+                                        <input id="guest-phone" type="tel" name="phone" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required/>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Anzahl Personen</label>
-                                        <input type="number" name="persons" min="1" max="3" value={formData.persons} onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
+                                        <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="guest-persons">Anzahl Personen</label>
+                                        <input id="guest-persons" type="number" name="persons" min="1" max="3" value={formData.persons} onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">E-Mail</label>
-                                    <input type="email" name="email" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
+                                    <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="guest-email">E-Mail</label>
+                                    <input id="guest-email" type="email" name="email" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" required />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Wunschtermin (ca.)</label>
-                                    <input type="date" name="date" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
+                                    <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="guest-date">Wunschtermin (ca.)</label>
+                                    <input id="guest-date" type="date" name="date" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Nachricht / Gutschein?</label>
-                                    <textarea rows="3" name="message" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Hast du einen Gutschein?"></textarea>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="guest-message">Nachricht / Gutschein?</label>
+                                    <textarea id="guest-message" rows="3" name="message" onChange={handleChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Hast du einen Gutschein?"></textarea>
                                 </div>
                                 <Button className="w-full">Anfrage senden</Button>
                             </form>
                         </Card>
                     </div>
-                </div>
+                </article>
             );
         };
         
         // --- FAQ KOMPONENTE ---
         const FAQPage = () => (
-            <div className="max-w-6xl mx-auto px-2 animate-fadeIn">
-                {/* Kompakte Kopfzeile für maximalen Platz */}
+            <article className="max-w-6xl mx-auto px-2 animate-fadeIn">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4 bg-white p-3 rounded-xl shadow-sm border border-gray-100">
                     <div className="flex-grow">
                         <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 m-0">
@@ -1298,12 +1316,11 @@
                             <span>Hinweis: KI kann Fehler machen ("halluzinieren"). Keine Gewähr für Richtigkeit.</span>
                         </div>
                     </div>
-                    <Button onClick={() => window.open('https://fly-know.streamlit.app/', '_blank')} className="text-sm py-1 px-3 whitespace-nowrap">
+                    <Button href="https://fly-know.streamlit.app/" target="_blank" className="text-sm py-1 px-3 whitespace-nowrap">
                         Im neuen Fenster öffnen <ExternalLink size={14} className="ml-1 inline"/>
                     </Button>
                 </div>
                 
-                {/* Iframe Integration - Angepasste Höhe damit Eingabezeile sichtbar ist */}
                 <div className="h-[70vh] min-h-[500px] bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden relative">
                     <iframe 
                         src="https://fly-know.streamlit.app/?embed=true"
@@ -1312,15 +1329,15 @@
                         title="Fly-Know FAQ Chat"
                     ></iframe>
                 </div>
-            </div>
+            </article>
         );
 
         
-        const SchnupperflugPage = ({ onBack }) => (
-            <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
-                <button onClick={onBack} className="mb-6 flex items-center text-blue-600 font-medium hover:underline">
+        const SchnupperflugPage = () => (
+            <article className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+                <a href="#home" className="mb-6 flex items-center text-blue-600 font-medium hover:underline inline-flex">
                     <ChevronLeft size={20} /> Zurück
-                </button>
+                </a>
                 <SectionHeading title="Schnupperflugtag 2026" subtitle="Ein Tag auf dem Segelflugplatz" />
                 <div className="grid md:grid-cols-2 gap-8">
                     <div className="space-y-6">
@@ -1374,27 +1391,20 @@
                             <p className="text-gray-600 mb-6">
                                 Sichere dir deinen Platz für dieses besondere Erlebnis. Die Plätze sind begrenzt!
                             </p>
-                            <a 
-                                href="https://form.jotform.com/lghotzenwald/schnupperflugtag-der-lgh-am-2-mai-2" 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="inline-block w-full"
-                            >
-                                <Button className="w-full py-4 text-lg shadow-xl hover:scale-[1.02] transform transition-transform">
-                                    Zur Anmeldung (JotForm) <ExternalLink size={20} className="inline ml-2" />
-                                </Button>
-                            </a>
+                            <Button href="https://form.jotform.com/lghotzenwald/schnupperflugtag-der-lgh-am-2-mai-2" target="_blank" rel="noopener noreferrer" className="w-full py-4 text-lg shadow-xl hover:scale-[1.02] transform transition-transform block">
+                                Zur Anmeldung (JotForm) <ExternalLink size={20} className="inline ml-2" />
+                            </Button>
                         </div>
                         <p className="text-sm text-center text-gray-500">
                             Hinweis: Die Anmeldung erfolgt über ein externes Formular.
                         </p>
                     </div>
                 </div>
-            </div>
+            </article>
         );
 
         const ImpressumPage = () => (
-            <div className="max-w-3xl mx-auto px-4 py-8 animate-fadeIn">
+            <article className="max-w-3xl mx-auto px-4 py-8 animate-fadeIn">
                 <SectionHeading title="Impressum" />
                 <Card className="p-8 space-y-6">
                     <div>
@@ -1428,11 +1438,11 @@
                         <p>Jens Isele, Johannes Kammerer, Maria Knoller, Werner Kramer, Marcus Neubronner, Ramona Riesterer, Hubert Strohmeier</p>
                     </div>
                 </Card>
-            </div>
+            </article>
         );
 
         const DatenschutzPage = () => (
-            <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+            <article className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
                 <SectionHeading title="Datenschutzerklärung nach der DSGVO" />
                 <Card className="p-8 space-y-6 text-gray-700">
                     <p className="text-sm text-gray-500">Zuletzt geändert am 1. Februar 2020</p>
@@ -1551,19 +1561,56 @@
                     <h3 className="text-xl font-bold text-gray-900 mt-6 border-b pb-2">VII. Aktualisierungen oder Änderungen dieser Datenschutzerklärung</h3>
                     <p>Wir behalten uns das Recht vor, diese Datenschutzbestimmungen von Zeit zu Zeit zu ändern oder zu prüfen. Sie finden das Datum der aktuellen Version unter „Zuletzt geändert am“. Ihre fortgesetzte Nutzung der Plattform nach der Bekanntmachung solcher Änderungen auf unserer Webseite stellt Ihre Zustimmung zu solchen Änderungen an den Datenschutzbestimmungen dar und gilt als Ihr Einverständnis der Bindung an die geänderten Bestimmungen.</p>
                 </Card>
-            </div>
+            </article>
         );
 
         // --- HAUPT APP ---
 
         function App() {
-            const [currentPage, setCurrentPage] = useState('home');
+            // SEO: Initialen Zustand aus dem URL-Hash (sofern vorhanden) auslesen
+            const [currentPage, setCurrentPage] = useState(() => {
+                const hash = window.location.hash.replace('#', '');
+                return hash || 'home';
+            });
             const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
             const [scrolled, setScrolled] = useState(false);
 
-            // Scroll nach oben bei Seitenwechsel
+            // SEO Routing: Lauscht auf URL-Änderungen durch Klick auf Links oder den Zurück-Button des Browsers
+            useEffect(() => {
+                const handleHashChange = () => {
+                    const hash = window.location.hash.replace('#', '');
+                    setCurrentPage(hash || 'home');
+                };
+                window.addEventListener('hashchange', handleHashChange);
+                return () => window.removeEventListener('hashchange', handleHashChange);
+            }, []);
+
+            // Scroll nach oben und SEO Titel-Update bei Seitenwechsel
             useEffect(() => {
                 window.scrollTo(0, 0);
+                
+                // SEO: Dynamische Titel für den Browser-Tab anpassen
+                const pageTitles = {
+                    home: "Startseite | Segelfliegen im Südschwarzwald",
+                    airport: "Flugplatz Hütten & Infrastruktur",
+                    history: "Chronik des Vereins",
+                    fleet: "Unser Flugzeugpark",
+                    training: "Ausbildung zum Segelflieger",
+                    competition: "Hotzenwaldwettbewerb",
+                    membership: "Mitglied werden",
+                    guestflight: "Schnupperflug & Gastflüge",
+                    contact: "Kontakt & Anfahrt",
+                    impressum: "Impressum",
+                    datenschutz: "Datenschutzerklärung",
+                    schnupperflugtag: "Schnupperflugtag 2026",
+                    preparation: "Flugvorbereitung & Wetter",
+                    links: "Links & Ressourcen",
+                    faq: "FAQ & Wissen"
+                };
+                
+                const titleSufix = " | Luftsportgemeinschaft Hotzenwald e.V.";
+                document.title = pageTitles[currentPage] ? `${pageTitles[currentPage]}${titleSufix}` : `Luftsportgemeinschaft Hotzenwald e.V.`;
+                
             }, [currentPage]);
 
             useEffect(() => {
@@ -1574,22 +1621,22 @@
 
             const renderContent = () => {
                 switch(currentPage) {
-                    case 'home': return <HomePage setCurrentPage={setCurrentPage} />;
+                    case 'home': return <HomePage />;
                     case 'airport': return <AirportPage />;
                     case 'history': return <HistoryPage />;
                     case 'fleet': return <FleetPage />;
-                    case 'training': return <TrainingPage setCurrentPage={setCurrentPage} />;
+                    case 'training': return <TrainingPage />;
                     case 'competition': return <CompetitionPage />; 
                     case 'membership': return <MembershipPage />; 
                     case 'guestflight': return <GuestFlightPage />; 
                     case 'contact': return <ContactPage />;
                     case 'impressum': return <ImpressumPage />;
                     case 'datenschutz': return <DatenschutzPage />;
-                    case 'schnupperflugtag': return <SchnupperflugPage onBack={() => setCurrentPage('home')} />;
+                    case 'schnupperflugtag': return <SchnupperflugPage />;
                     case 'preparation': return <PreparationPage />;
                     case 'links': return <LinksPage />;
                     case 'faq': return <FAQPage />;
-                    default: return <HomePage setCurrentPage={setCurrentPage} />;
+                    default: return <HomePage />;
                 }
             };
 
@@ -1598,26 +1645,27 @@
                     
                     <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-md py-2' : 'bg-white py-4'}`}>
                         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-                            <div 
-                                className="flex items-center gap-4 cursor-pointer group"
-                                onClick={() => setCurrentPage('home')}
+                            <a 
+                                href="#home"
+                                className="flex items-center gap-4 group"
                             >
                                 {/* Neues Logo */}
-                                <img src="public/images/LGH-Logo.jpg" alt="Logo LGH" className="h-12 w-auto object-contain" />
+                                <img src="public/images/LGH-Logo.jpg" alt="Logo der Luftsportgemeinschaft Hotzenwald" className="h-12 w-auto object-contain" />
                                 
                                 <div>
-                                    <h1 className="text-lg font-bold leading-none tracking-tight">{siteContent.general.name}</h1>
-                                    <p className="text-xs text-gray-500 tracking-wide mt-1">FLUGPLATZ HÜTTEN-HOTZENWALD</p>
+                                    <span className="block text-lg font-bold leading-none tracking-tight">{siteContent.general.name}</span>
+                                    <span className="block text-xs text-gray-500 tracking-wide mt-1">FLUGPLATZ HÜTTEN-HOTZENWALD</span>
                                 </div>
-                            </div>
+                            </a>
 
-                            <nav className="hidden md:flex items-center gap-1">
+                            <nav className="hidden md:flex items-center gap-1" aria-label="Hauptnavigation">
                                 {siteContent.nav.map(item => {
                                     if (item.children) {
                                         return (
                                             <div key={item.id} className="relative group">
                                                 <button
                                                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-1 text-gray-600 hover:text-blue-600 hover:bg-gray-50`}
+                                                    aria-haspopup="true"
                                                 >
                                                     {item.label}
                                                     <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" /> 
@@ -1625,25 +1673,15 @@
                                                 <div className="absolute right-0 top-full pt-2 w-48 hidden group-hover:block z-50">
                                                     <div className="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden py-1">
                                                         {item.children.map((child, idx) => (
-                                                            child.external ? (
-                                                                <a 
-                                                                    key={idx}
-                                                                    href={child.link}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600"
-                                                                >
-                                                                    {child.label}
-                                                                </a>
-                                                            ) : (
-                                                                <button
-                                                                    key={idx}
-                                                                    onClick={() => setCurrentPage(child.id)}
-                                                                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600"
-                                                                >
-                                                                    {child.label}
-                                                                </button>
-                                                            )
+                                                            <a 
+                                                                key={idx}
+                                                                href={child.external ? child.link : `#${child.id}`}
+                                                                target={child.external ? "_blank" : undefined}
+                                                                rel={child.external ? "noopener noreferrer" : undefined}
+                                                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                                                            >
+                                                                {child.label}
+                                                            </a>
                                                         ))}
                                                     </div>
                                                 </div>
@@ -1652,9 +1690,9 @@
                                     }
                                     
                                     return (
-                                        <button
+                                        <a
                                             key={item.id}
-                                            onClick={() => setCurrentPage(item.id)}
+                                            href={`#${item.id}`}
                                             className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                                                 currentPage === item.id 
                                                     ? 'bg-blue-50 text-blue-700' 
@@ -1662,22 +1700,23 @@
                                             }`}
                                         >
                                             {item.label}
-                                        </button>
+                                        </a>
                                     );
                                 })}
-                                <Button onClick={() => setCurrentPage('membership')} variant="primary" className="ml-4 text-sm px-4 py-2">Mitglied werden</Button>
+                                <Button href="#membership" variant="primary" className="ml-4 text-sm px-4 py-2">Mitglied werden</Button>
                             </nav>
 
                             <button 
                                 className="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                aria-label="Menü öffnen"
                             >
                                 {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                             </button>
                         </div>
 
                         {isMobileMenuOpen && (
-                            <div className="md:hidden absolute top-full left-0 w-full bg-white border-t border-gray-100 shadow-lg py-4 px-4 flex flex-col gap-2 h-[calc(100vh-80px)] overflow-y-auto">
+                            <nav className="md:hidden absolute top-full left-0 w-full bg-white border-t border-gray-100 shadow-lg py-4 px-4 flex flex-col gap-2 h-[calc(100vh-80px)] overflow-y-auto">
                                 {siteContent.nav.map(item => (
                                     <div key={item.id}>
                                         {item.children ? (
@@ -1685,50 +1724,36 @@
                                                 <div className="px-4 py-2 text-sm font-bold text-gray-900">{item.label}</div>
                                                 <div className="pl-4 border-l-2 border-gray-100 ml-4 flex flex-col gap-2">
                                                     {item.children.map((child, idx) => (
-                                                        child.external ? (
-                                                            <a 
-                                                                key={idx}
-                                                                href={child.link}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="w-full text-left px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50"
-                                                            >
-                                                                {child.label}
-                                                            </a>
-                                                        ) : (
-                                                            <button
-                                                                key={idx}
-                                                                onClick={() => {
-                                                                    setCurrentPage(child.id);
-                                                                    setIsMobileMenuOpen(false);
-                                                                }}
-                                                                className="w-full text-left px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50"
-                                                            >
-                                                                {child.label}
-                                                            </button>
-                                                        )
+                                                        <a 
+                                                            key={idx}
+                                                            href={child.external ? child.link : `#${child.id}`}
+                                                            target={child.external ? "_blank" : undefined}
+                                                            rel={child.external ? "noopener noreferrer" : undefined}
+                                                            onClick={() => !child.external && setIsMobileMenuOpen(false)}
+                                                            className="w-full text-left px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 inline-block"
+                                                        >
+                                                            {child.label}
+                                                        </a>
                                                     ))}
                                                 </div>
                                             </>
                                         ) : (
-                                            <button
-                                                onClick={() => {
-                                                    setCurrentPage(item.id);
-                                                    setIsMobileMenuOpen(false);
-                                                }}
-                                                className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium ${
+                                            <a
+                                                href={`#${item.id}`}
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium inline-block ${
                                                     currentPage === item.id 
                                                         ? 'bg-blue-50 text-blue-700' 
                                                         : 'text-gray-600 hover:bg-gray-50'
                                                 }`}
                                             >
                                                 {item.label}
-                                            </button>
+                                            </a>
                                         )}
                                     </div>
                                 ))}
-                                <Button onClick={() => { setCurrentPage('membership'); setIsMobileMenuOpen(false); }} variant="primary" className="mx-4 mt-2">Mitglied werden</Button>
-                            </div>
+                                <Button href="#membership" onClick={() => setIsMobileMenuOpen(false)} variant="primary" className="mx-4 mt-2">Mitglied werden</Button>
+                            </nav>
                         )}
                     </header>
 
@@ -1749,6 +1774,7 @@
                                      href={siteContent.general.facebookLink} 
                                      target="_blank" 
                                      rel="noopener noreferrer"
+                                     aria-label="Besuche uns auf Facebook"
                                      className="w-10 h-10 bg-gray-800 rounded flex items-center justify-center hover:bg-blue-600 text-white cursor-pointer transition"
                                    >
                                      <Facebook size={20} />
@@ -1758,18 +1784,16 @@
                             <div>
                                 <h4 className="text-white font-bold mb-4">Quick Links</h4>
                                 <ul className="space-y-2 text-sm">
-                                    <li onClick={() => setCurrentPage('membership')} className="hover:text-white cursor-pointer transition">Mitglied werden</li>
-                                    <li onClick={() => setCurrentPage('guestflight')} className="hover:text-white cursor-pointer transition">Gastflüge & Gutscheine</li>
-                                    <li className="hover:text-white cursor-pointer transition">
-                                        <a href="http://www.lgh-platz.de/cam/cam31.jpg" target="_blank" rel="noopener noreferrer">Webcam</a>
-                                    </li>
+                                    <li><a href="#membership" className="hover:text-white transition">Mitglied werden</a></li>
+                                    <li><a href="#guestflight" className="hover:text-white transition">Gastflüge & Gutscheine</a></li>
+                                    <li><a href="http://www.lgh-platz.de/cam/cam31.jpg" target="_blank" rel="noopener noreferrer" className="hover:text-white transition">Webcam</a></li>
                                 </ul>
                             </div>
                             <div>
                                 <h4 className="text-white font-bold mb-4">Rechtliches</h4>
                                 <ul className="space-y-2 text-sm">
-                                    <li onClick={() => setCurrentPage('impressum')} className="hover:text-white cursor-pointer transition">Impressum</li>
-                                    <li onClick={() => setCurrentPage('datenschutz')} className="hover:text-white cursor-pointer transition">Datenschutzerklärung</li>
+                                    <li><a href="#impressum" className="hover:text-white transition">Impressum</a></li>
+                                    <li><a href="#datenschutz" className="hover:text-white transition">Datenschutzerklärung</a></li>
                                 </ul>
                             </div>
                         </div>
